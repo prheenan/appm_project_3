@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import GenUtilities  as pGenUtil
 import PlotUtilities as pPlotUtil
 import CheckpointUtilities as pCheckUtil
+from scipy.stats import norm
 
 outDir = "./out/"
 
@@ -18,13 +19,40 @@ def getBinomials(nVals,p,nPoints):
         dataMatrix[i,:] = np.random.binomial(n,p,nPoints)
     return dataMatrix
 
+def q12Dist(X,n):
+    return -2 * np.log( 1 - X/(2*n))
+
+def normHist(data,bins,**kwargs):
+    counts,bins = np.histogram(data,bins,normed=False)
+    normalized = counts / sum(counts * np.diff(bins))
+    plt.bar(left=bins[:-1],height=normalized,width=np.mean(np.diff(bins)),
+            **kwargs)
+    return normalized
+
 def plotBinomials(dataMatrix,nVals,p):
     nTrials = nVals.size # rows are the trials
+    nPoints = 200
     for i,n in enumerate(nVals):
         fig = pPlotUtil.figure()
         xTrials = dataMatrix[i,:]
+        # mu: expected value of Binomial(n,p)
+        mu = n*p
+        # g(mu)
+        g_mu = q12Dist(mu,n)
+        xBar = np.mean(xTrials)
+        # g(XBar)
+        g_xBar = q12Dist(xBar,n)
+        # g'(mu)
+        gPrimeMu = 1/(n-mu/2)
+        # effectie variance
+        stdevTheory= n*p*(1-p)
+        stdevEff = np.abs((gPrimeMu*stdevTheory)/n)
+        normal = norm(loc=g_mu,scale=stdevEff)
         dist = -2 * np.log(1-xTrials/(2*n))
-        plt.hist(x=dist,bins=max(n/20,10))
+        xVals = np.linspace(0,max(dist),nPoints)
+        distApprox = normal.pdf(xVals)
+        normalized = normHist(dist,max(n/20,10))
+        plt.plot(xVals,(distApprox/max(distApprox))*max(normalized),'r-')
         plt.xlabel("-2 * ln(1-X/2n)")
         plt.ylabel("Proportion")
         pPlotUtil.savefig(fig,outDir + "trial_n{:d}".format(int(n)))
