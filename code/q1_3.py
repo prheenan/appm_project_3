@@ -19,8 +19,8 @@ def getBinomials(nVals,p,nPoints):
         dataMatrix[i,:] = np.random.binomial(n,p,nPoints)
     return dataMatrix
 
-def q12Dist(X,n):
-    return -2 * np.log( 1 - X/(2*n))
+def q12Dist(xBar):
+    return -2 * np.log( 1 - xBar/2)
 
 def normHist(data,bins,**kwargs):
     counts,bins = np.histogram(data,bins,normed=False)
@@ -36,30 +36,38 @@ def plotBinomials(dataMatrix,nVals,p):
         fig = pPlotUtil.figure()
         xTrials = dataMatrix[i,:]
         # mu: expected value of Binomial(n,p)
-        mu = n*p
-        # g(mu)
-        g_mu = q12Dist(mu,n)
-        xBar = np.mean(xTrials)
-        # g(XBar)
-        g_xBar = q12Dist(xBar,n)
-        # g'(mu)
-        gPrimeMu = 1/(n-mu/2)
         # effectie variance
-        stdevTheory= n*p*(1-p)
-        stdevEff = np.abs((gPrimeMu*stdevTheory)/n)
-        normal = norm(loc=g_mu,scale=stdevEff)
-        dist = -2 * np.log(1-xTrials/(2*n))
-        xVals = np.linspace(0,max(dist),nPoints)
-        distApprox = normal.pdf(xVals)
-        normalized = normHist(dist,max(n/20,10))
-        plt.plot(xVals,(distApprox/max(distApprox))*max(normalized),'r-')
+        mu = n*p
+        sigma= n*p*(1-p)
+        gMu = q12Dist(mu/n)
+        gPrimeMu = 1/(1-p/2)
+        normalVar = (sigma*gPrimeMu)**2
+        normal = norm(loc=0,scale=np.sqrt(normalVar))
+        dist = np.sqrt(n) * (q12Dist(xTrials/n) - gMu)
+        # n/p is the number of possible values for anything in xTrials
+        # taking the log ceiling of this gives an upper bound for the number 
+        # of bins for the log of xTrials
+        nBins = np.ceil(np.log(n/p))
+        distMean = np.mean(dist)
+        distVar = np.std(dist)**2
+        normalized = normHist(dist,nBins,
+                              label=("sqrt(n)*(g(Xbar)-g(mu), "+
+                                     "Mean={:.3f},Stdev={:.3f}").\
+                              format(distMean,distVar))
+        xVals = np.linspace(min(dist),max(dist),1000)
+        rawPDF = norm.pdf(xVals)
+        theoryDist =  rawPDF 
+        plt.plot(xVals,theoryDist,'r-',linewidth=3.0,
+                 label="Normal(mu=0,var=[sigma*g'(mu)]^2). sqrt(var)={:.2f}".\
+                 format(np.sqrt(normalVar)))
         plt.xlabel("-2 * ln(1-X/2n)")
         plt.ylabel("Proportion")
+        plt.legend()
         pPlotUtil.savefig(fig,outDir + "trial_n{:d}".format(int(n)))
 
-_nVals = np.array([10,50,100,1e3,1e4,1e5])
+_nVals = np.array([10,50,100,1e3])
 pGenUtil.ensureDirExists(outDir)
 _p=1/3.
-_nPoints = 1e4
+_nPoints = 1e3
 dataMatrix = getBinomials(_nVals,_p,_nPoints)
 plotBinomials(dataMatrix,_nVals,_p)
