@@ -10,6 +10,11 @@ from itertools import cycle
 import sys
 
 
+def tickAxisFont(fontsize=18):
+    plt.tick_params(axis='both', which='major', labelsize=fontsize)
+    plt.tick_params(axis='both', which='minor', labelsize=fontsize)
+
+
 def cmap(num,cmap = plt.cm.brg):
     return cmap(np.linspace(0, 1, num))
 
