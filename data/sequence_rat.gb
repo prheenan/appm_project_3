@@ -1,0 +1,182 @@
+LOCUS       NM_134326               2020 bp    mRNA    linear   ROD 10-AUG-2014
+DEFINITION  Rattus norvegicus albumin (Alb), mRNA.
+ACCESSION   NM_134326 XM_001072597
+VERSION     NM_134326.2  GI:158138567
+KEYWORDS    RefSeq.
+SOURCE      Rattus norvegicus (Norway rat)
+  ORGANISM  Rattus norvegicus
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Euarchontoglires; Glires; Rodentia;
+            Sciurognathi; Muroidea; Muridae; Murinae; Rattus.
+REFERENCE   1  (bases 1 to 2020)
+  AUTHORS   Ozdemir M, Kiyici A, Balevi A, Mevlitoglu I and Peru C.
+  TITLE     Assessment of ischaemia-modified albumin level in patients with
+            psoriasis
+  JOURNAL   Clin. Exp. Dermatol. 37 (6), 610-614 (2012)
+   PUBMED   22607558
+REFERENCE   2  (bases 1 to 2020)
+  AUTHORS   Chian CF, Chiang CH, Yuan-Jung C, Chuang CH, Liu SL, Yi-Han J,
+            Zhang H and Ryu JH.
+  TITLE     Apocynin attenuates lipopolysaccharide-induced lung injury in an
+            isolated and perfused rat lung model
+  JOURNAL   Shock 38 (2), 196-202 (2012)
+   PUBMED   22592748
+REFERENCE   3  (bases 1 to 2020)
+  AUTHORS   Figueira TR, Ribeiro RA, Ignacio-Souza LM, Vercesi AE, Carneiro EM
+            and Oliveira HC.
+  TITLE     Enhanced insulin secretion and glucose tolerance in rats exhibiting
+            low plasma free fatty acid levels and hypertriglyceridaemia due to
+            congenital albumin deficiency
+  JOURNAL   Exp. Physiol. 97 (4), 525-533 (2012)
+   PUBMED   22198013
+  REMARK    GeneRIF: Overall, rats with albumin deficiency display enhanced
+            glucose tolerance, insulin secretion and gluconeogenic flux.
+REFERENCE   4  (bases 1 to 2020)
+  AUTHORS   Zhang LJ, Xue YQ, Yang C, Yang WH, Chen L, Zhang QJ, Qu TY, Huang
+            S, Zhao LR, Wang XM and Duan WM.
+  TITLE     Human albumin prevents 6-hydroxydopamine-induced loss of tyrosine
+            hydroxylase in in vitro and in vivo
+  JOURNAL   PLoS ONE 7 (7), E41226 (2012)
+   PUBMED   22815976
+  REMARK    GeneRIF: albumin prevents 6-hydroxydopamine-induced loss of
+            tyrosine hydroxylase
+REFERENCE   5  (bases 1 to 2020)
+  AUTHORS   Bhattacharyya S, Tian J, Bouhassira EE and Locker J.
+  TITLE     Systematic targeted integration to study Albumin gene control
+            elements
+  JOURNAL   PLoS ONE 6 (8), E23234 (2011)
+   PUBMED   21858039
+  REMARK    GeneRIF: Data indicate that transcription of Alb is regulated by a
+            complicated system of distant enhancers.
+REFERENCE   6  (bases 1 to 2020)
+  AUTHORS   Smith,K.T., Failla,M.L. and Cousins,R.J.
+  TITLE     Identification of albumin as the plasma carrier for zinc absorption
+            by perfused rat intestine
+  JOURNAL   Biochem. J. 184 (3), 627-633 (1979)
+   PUBMED   540055
+REFERENCE   7  (bases 1 to 2020)
+  AUTHORS   Aoyagi,Y., Ikenaka,T. and Ichida,F.
+  TITLE     Copper(II)-binding ability of human alpha-fetoprotein
+  JOURNAL   Cancer Res. 38 (10), 3483-3486 (1978)
+   PUBMED   80265
+REFERENCE   8  (bases 1 to 2020)
+  AUTHORS   Isemura,S. and Ikenaka,T.
+  TITLE     Amino acid sequences of fragments I and II obtained by cyanogen
+            bromide cleavage of rat serum albumin
+  JOURNAL   J. Biochem. 83 (1), 35-48 (1978)
+   PUBMED   564345
+REFERENCE   9  (bases 1 to 2020)
+  AUTHORS   Lamers,C.B., Hafkenscheid,J.C. and van Tongeren,J.H.
+  TITLE     Serum albumin levels in patients with the Zollinger-Ellison
+            syndrome
+  JOURNAL   Gastroenterology 73 (5), 975-979 (1977)
+   PUBMED   908508
+REFERENCE   10 (bases 1 to 2020)
+  AUTHORS   Strauss,A.W., Bennett,C.D., Donohue,A.M., Rodkey,J.A. and
+            Alberts,A.W.
+  TITLE     Rat liver pre-proalbumin: complete amino acid sequence of the
+            pre-piece. Analysis of the direct translation product of albumin
+            messenger RNA
+  JOURNAL   J. Biol. Chem. 252 (19), 6846-6855 (1977)
+   PUBMED   893447
+COMMENT     PROVISIONAL REFSEQ: This record has not yet been subject to final
+            NCBI review. The reference sequence was derived from BC085359.1.
+            On Oct 11, 2007 this sequence version replaced gi:19705430.
+            
+            Summary: may play a role in nitric oxide signaling; may mediate
+            formation of S-nitrosothiols [RGD, Feb 2006].
+            
+            Publication Note:  This RefSeq record includes a subset of the
+            publications that are available for this gene. Please see the Gene
+            record to access additional publications.
+            
+            ##Evidence-Data-START##
+            Transcript exon combination :: BC085359.1, V01222.1 [ECO:0000332]
+            ##Evidence-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..2020
+                     /organism="Rattus norvegicus"
+                     /mol_type="mRNA"
+                     /db_xref="taxon:10116"
+                     /chromosome="14"
+                     /map="14p22"
+     gene            1..2020
+                     /gene="Alb"
+                     /gene_synonym="Alb1; Albza"
+                     /note="albumin"
+                     /db_xref="GeneID:24186"
+                     /db_xref="RGD:2085"
+     CDS             16..1842
+                     /gene="Alb"
+                     /gene_synonym="Alb1; Albza"
+                     /note="serum albumin"
+                     /codon_start=1
+                     /product="serum albumin precursor"
+                     /protein_id="NP_599153.2"
+                     /db_xref="GI:158138568"
+                     /db_xref="GeneID:24186"
+                     /db_xref="RGD:2085"
+                     /translation="MKWVTFLLLLFISGSAFSRGVFRREAHKSEIAHRFKDLGEQHFK
+                     GLVLIAFSQYLQKCPYEEHIKLVQEVTDFAKTCVADENAENCDKSIHTLFGDKLCAIP
+                     KLRDNYGELADCCAKQEPERNECFLQHKDDNPNLPPFQRPEAEAMCTSFQENPTSFLG
+                     HYLHEVARRHPYFYAPELLYYAEKYNEVLTQCCTESDKAACLTPKLDAVKEKALVAAV
+                     RQRMKCSSMQRFGERAFKAWAVARMSQRFPNAEFAEITKLATDLTKINKECCHGDLLE
+                     CADDRAELAKYMCENQATISSKLQACCDKPVLQKSQCLAEIEHDNIPADLPSIAADFV
+                     EDKEVCKNYAEAKDVFLGTFLYEYSRRHPDYSVSLLLRLAKKYEATLEKCCAEGDPPA
+                     CYGTVLAEFQPLVEEPKNLVKTNCELYEKLGEYGFQNAILVRYTQKAPQVSTPTLVEA
+                     ARNLGRVGTKCCTLPEAQRLPCVEDYLSAILNRLCVLHEKTPVSEKVTKCCSGSLVER
+                     RPCFSALTVDETYVPKEFKAETFTFHSDICTLPDKEKQIKKQTALAELVKHKPKATED
+                     QLKTVMGDFAQFVDKCCKAADKDNCFATEGPNLVARSKEALA"
+     sig_peptide     16..69
+                     /gene="Alb"
+                     /gene_synonym="Alb1; Albza"
+                     /inference="COORDINATES: ab initio prediction:SignalP:4.0"
+     mat_peptide     88..1839
+                     /gene="Alb"
+                     /gene_synonym="Alb1; Albza"
+                     /product="Serum albumin"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="propagated from UniProtKB/Swiss-Prot (P02770.2)"
+     STS             1334..1436
+                     /gene="Alb"
+                     /gene_synonym="Alb1; Albza"
+                     /standard_name="UniSTS:465369"
+                     /db_xref="UniSTS:465369"
+ORIGIN      
+        1 ctagcctctg gcacaatgaa gtgggtaacc tttctcctcc tcctcttcat ctccggttct
+       61 gccttttcca ggggtgtgtt tcgccgagaa gcacacaaga gtgagatcgc ccatcggttt
+      121 aaggacttgg gagaacagca tttcaaaggc ctagtcctga ttgccttttc ccagtatctc
+      181 cagaaatgcc catatgaaga gcatatcaaa ttggtgcagg aagtaacaga ctttgcaaaa
+      241 acatgtgtcg ctgatgagaa tgccgaaaac tgtgacaagt ccattcacac tctcttcgga
+      301 gacaagttat gcgccattcc aaagcttcgc gacaactacg gtgaactggc tgactgctgt
+      361 gcaaaacaag agcccgaaag aaacgagtgt ttcctgcagc acaaggatga caaccccaac
+      421 ctgccaccct tccagaggcc ggaggctgag gccatgtgca cctccttcca ggagaaccct
+      481 accagctttc tgggacacta tttgcatgaa gttgccagga gacatcctta tttctatgcc
+      541 ccagaactcc tttactatgc tgagaaatac aatgaggttc tgacccagtg ctgcacagag
+      601 tctgacaaag cagcctgcct gacaccgaag cttgatgccg tgaaagagaa agcactggtc
+      661 gcagctgtcc gtcagaggat gaagtgctcc agtatgcaga gatttggaga gagagccttc
+      721 aaagcctggg cagtagctcg tatgagccag cgattcccca atgctgagtt cgcagaaatc
+      781 accaaattgg caacagacct caccaaaatc aacaaggagt gctgtcacgg cgacctgttg
+      841 gaatgcgcgg atgacagggc ggaacttgcc aagtacatgt gtgagaacca ggccactatc
+      901 tccagcaaac tgcaggcttg ctgtgataag ccagtgctgc agaaatccca gtgtctcgct
+      961 gagatagaac atgacaacat tcctgccgat ctgccctcaa tagctgctga ctttgttgag
+     1021 gataaggaag tgtgtaagaa ctatgctgag gccaaggatg tcttcctggg cacgtttttg
+     1081 tatgaatatt caagaaggca ccccgattac tccgtgtccc tgctgctgag acttgctaag
+     1141 aaatatgaag ccacactgga gaagtgctgt gctgaaggcg atcctcctgc ctgctacggc
+     1201 acagtgcttg cagaatttca gcctcttgta gaagaaccta agaacttggt caaaactaac
+     1261 tgtgagcttt acgagaagct tggagagtat ggattccaaa acgccattct ggttcgatac
+     1321 acccagaaag cacctcaggt gtcgacccca actctcgtgg aggcagcaag aaacctggga
+     1381 agagtgggca ccaagtgttg tacccttcct gaagctcaga gactgccctg tgtggaagac
+     1441 tatctgtctg ccatcctgaa ccgtctgtgt gtgctgcatg agaagacccc agtgagcgag
+     1501 aaggtcacca agtgctgtag tgggtccctg gtggaaagac ggccatgttt ctctgctctg
+     1561 acagttgacg agacatatgt ccccaaagag tttaaagctg agaccttcac cttccactct
+     1621 gatatctgca cactcccaga caaggagaag cagataaaga agcaaacggc tctcgctgag
+     1681 ctggtgaaac acaagcccaa ggccacagaa gatcagctga agacggtgat gggtgacttc
+     1741 gcacaattcg tggacaagtg ttgcaaggct gccgacaagg ataactgctt cgccactgag
+     1801 gggccaaacc ttgttgctag aagcaaagaa gccttagcct aaacacatca caaccatctc
+     1861 aggctaccct gagaaaaaaa gacatgaaga ctcaggactc atctcttctg ttggtgtaaa
+     1921 accaacaccc taaggaacac aaatttcttt gaacatttga cttcttttct ctgtgccgca
+     1981 attaataaaa aatagaaaga aaaaaaaaaa aaaaaaaaaa
+//
+

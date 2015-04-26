@@ -1,0 +1,573 @@
+LOCUS       NM_000477               2264 bp    mRNA    linear   PRI 15-MAR-2015
+DEFINITION  Homo sapiens albumin (ALB), mRNA.
+ACCESSION   NM_000477
+VERSION     NM_000477.5  GI:215982788
+KEYWORDS    RefSeq.
+SOURCE      Homo sapiens (human)
+  ORGANISM  Homo sapiens
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini;
+            Catarrhini; Hominidae; Homo.
+REFERENCE   1  (bases 1 to 2264)
+  AUTHORS   Liu D and Zempleni J.
+  TITLE     Transcriptional regulation of the albumin gene depends on the
+            removal of histone methylation marks by the FAD-dependent monoamine
+            oxidase lysine-specific demethylase 1 in HepG2 human
+            hepatocarcinoma cells
+  JOURNAL   J. Nutr. 144 (7), 997-1001 (2014)
+   PUBMED   24744315
+  REMARK    GeneRIF: Data suggest riboflavin status regulates hepatocyte gene
+            expression; in HepG2 cells, depletion of LSD1 (lysine (K)-specific
+            demethylase 1A) causes aberrant gene regulation in
+            riboflavin-deficient cells resulting in increased ALB expression.
+REFERENCE   2  (bases 1 to 2264)
+  AUTHORS   Minchiotti L, Galliano M, Kragh-Hansen U and Peters T Jr.
+  TITLE     Mutations and polymorphisms of the gene of the major human blood
+            protein, serum albumin
+  JOURNAL   Hum. Mutat. 29 (8), 1007-1016 (2008)
+   PUBMED   18459107
+REFERENCE   3  (bases 1 to 2264)
+  AUTHORS   Sugio S, Kashima A, Mochizuki S, Noda M and Kobayashi K.
+  TITLE     Crystal structure of human serum albumin at 2.5 A resolution
+  JOURNAL   Protein Eng. 12 (6), 439-446 (1999)
+   PUBMED   10388840
+REFERENCE   4  (bases 1 to 2264)
+  AUTHORS   He XM and Carter DC.
+  TITLE     Atomic structure and chemistry of human serum albumin
+  JOURNAL   Nature 358 (6383), 209-215 (1992)
+   PUBMED   1630489
+  REMARK    Erratum:[Nature 1993 Jul 22;364(6435):362]
+REFERENCE   5  (bases 1 to 2264)
+  AUTHORS   Carter DC and He XM.
+  TITLE     Structure of human serum albumin
+  JOURNAL   Science 249 (4966), 302-303 (1990)
+   PUBMED   2374930
+REFERENCE   6  (bases 1 to 2264)
+  AUTHORS   Urano,Y., Watanabe,K., Sakai,M. and Tamaoki,T.
+  TITLE     The human albumin gene. Characterization of the 5' and 3' flanking
+            regions and the polymorphic gene transcripts
+  JOURNAL   J. Biol. Chem. 261 (7), 3244-3251 (1986)
+   PUBMED   2419329
+REFERENCE   7  (bases 1 to 2264)
+  AUTHORS   Hawkins,J.W. and Dugaiczyk,A.
+  TITLE     The human serum albumin gene: structure of a unique locus
+  JOURNAL   Gene 19 (1), 55-58 (1982)
+   PUBMED   6292049
+REFERENCE   8  (bases 1 to 2264)
+  AUTHORS   Dugaiczyk,A., Law,S.W. and Dennison,O.E.
+  TITLE     Nucleotide sequence and the encoded amino acids of human serum
+            albumin mRNA
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 79 (1), 71-75 (1982)
+   PUBMED   6275391
+REFERENCE   9  (bases 1 to 2264)
+  AUTHORS   Heaney-Kieras,J. and King,T.P.
+  TITLE     Limited pepsin digestion of human plasma albumin
+  JOURNAL   J. Biol. Chem. 252 (12), 4326-4329 (1977)
+   PUBMED   325004
+REFERENCE   10 (bases 1 to 2264)
+  AUTHORS   Meloun,B., Moravek,L. and Kostka,V.
+  TITLE     Complete amino acid sequence of human serum albumin
+  JOURNAL   FEBS Lett. 58 (1), 134-137 (1975)
+   PUBMED   1225573
+COMMENT     REVIEWED REFSEQ: This record has been curated by NCBI staff. The
+            reference sequence was derived from DA642320.1, DQ986150.1 and
+            N53869.1.
+            This sequence is a reference standard in the RefSeqGene project.
+            On Dec 5, 2008 this sequence version replaced gi:186659515.
+            
+            Summary: Albumin is a soluble, monomeric protein which comprises
+            about one-half of the blood serum protein. Albumin functions
+            primarily as a carrier protein for steroids, fatty acids, and
+            thyroid hormones and plays a role in stabilizing extracellular
+            fluid volume. Albumin is a globular unglycosylated serum protein of
+            molecular weight 65,000. Albumin is synthesized in the liver as
+            preproalbumin which has an N-terminal peptide that is removed
+            before the nascent protein is released from the rough endoplasmic
+            reticulum. The product, proalbumin, is in turn cleaved in the Golgi
+            vesicles to produce the secreted albumin. [provided by RefSeq, Jul
+            2008].
+            
+            Publication Note:  This RefSeq record includes a subset of the
+            publications that are available for this gene. Please see the Gene
+            record to access additional publications.
+            
+            ##Evidence-Data-START##
+            Transcript exon combination :: V00495.1, AF542069.1 [ECO:0000332]
+            RNAseq introns              :: single sample supports all introns
+                                           SAMEA1970526, SAMEA2142680
+                                           [ECO:0000348]
+            ##Evidence-Data-END##
+            COMPLETENESS: full length.
+PRIMARY     REFSEQ_SPAN         PRIMARY_IDENTIFIER PRIMARY_SPAN        COMP
+            1-62                DA642320.1         1-62
+            63-1946             DQ986150.1         1-1884
+            1947-2264           N53869.1           1-318               c
+FEATURES             Location/Qualifiers
+     source          1..2264
+                     /organism="Homo sapiens"
+                     /mol_type="mRNA"
+                     /db_xref="taxon:9606"
+                     /chromosome="4"
+                     /map="4q13.3"
+     gene            1..2264
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /note="albumin"
+                     /db_xref="GeneID:213"
+                     /db_xref="HGNC:HGNC:399"
+                     /db_xref="HPRD:00062"
+                     /db_xref="MIM:103600"
+     exon            1..152
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     misc_feature    14..16
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /note="upstream in-frame stop codon"
+     CDS             74..1903
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /note="cell growth inhibiting protein 42; serum albumin;
+                     growth-inhibiting protein 20; albumin (AA 34); albumin (32
+                     AA)"
+                     /codon_start=1
+                     /product="serum albumin preproprotein"
+                     /protein_id="NP_000468.1"
+                     /db_xref="GI:4502027"
+                     /db_xref="CCDS:CCDS3555.1"
+                     /db_xref="GeneID:213"
+                     /db_xref="HGNC:HGNC:399"
+                     /db_xref="HPRD:00062"
+                     /db_xref="MIM:103600"
+                     /translation="MKWVTFISLLFLFSSAYSRGVFRRDAHKSEVAHRFKDLGEENFK
+                     ALVLIAFAQYLQQCPFEDHVKLVNEVTEFAKTCVADESAENCDKSLHTLFGDKLCTVA
+                     TLRETYGEMADCCAKQEPERNECFLQHKDDNPNLPRLVRPEVDVMCTAFHDNEETFLK
+                     KYLYEIARRHPYFYAPELLFFAKRYKAAFTECCQAADKAACLLPKLDELRDEGKASSA
+                     KQRLKCASLQKFGERAFKAWAVARLSQRFPKAEFAEVSKLVTDLTKVHTECCHGDLLE
+                     CADDRADLAKYICENQDSISSKLKECCEKPLLEKSHCIAEVENDEMPADLPSLAADFV
+                     ESKDVCKNYAEAKDVFLGMFLYEYARRHPDYSVVLLLRLAKTYETTLEKCCAAADPHE
+                     CYAKVFDEFKPLVEEPQNLIKQNCELFEQLGEYKFQNALLVRYTKKVPQVSTPTLVEV
+                     SRNLGKVGSKCCKHPEAKRMPCAEDYLSVVLNQLCVLHEKTPVSDRVTKCCTESLVNR
+                     RPCFSALEVDETYVPKEFNAETFTFHADICTLSEKERQIKKQTALVELVKHKPKATKE
+                     QLKAVMDDFAAFVEKCCKADDKETCFAEEGKKLVAASQAALGL"
+     sig_peptide     74..127
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="COORDINATES: ab initio prediction:SignalP:4.0"
+     proprotein      128..1900
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /product="albumin proprotein"
+     mat_peptide     146..1900
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /product="albumin"
+     misc_feature    155..157
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    203..205
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    266..268
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    317..319
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Phosphoserine; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); phosphorylation site"
+     misc_feature    335..337
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    362..364
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    422..424
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    461..463
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    551..553
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    620..622
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    665..667
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    686..688
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    713..715
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    728..730
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    740..742
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Aspirin-acetylated lysine; propagated from
+                     UniProtKB/Swiss-Prot (P02768.2); other site"
+     misc_feature    758..760
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    779..781
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    863..865
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    929..931
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    965..967
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1001..1003
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1220..1222
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1259..1261
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1310..1312
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1349..1351
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1385..1387
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1400..1402
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Phosphoserine; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); phosphorylation site"
+     misc_feature    1403..1405
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Phosphothreonine; propagated from
+                     UniProtKB/Swiss-Prot (P02768.2); phosphorylation site"
+     misc_feature    1409..1411
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Phosphothreonine; propagated from
+                     UniProtKB/Swiss-Prot (P02768.2); phosphorylation site"
+     misc_feature    1439..1441
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1451..1453
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1541..1543
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1568..1570
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1643..1645
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1700..1702
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1715..1717
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1757..1759
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1766..1768
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1814..1816
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1823..1825
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1835..1837
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     misc_feature    1865..1867
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="Not glycated; propagated from UniProtKB/Swiss-Prot
+                     (P02768.2); other site"
+     exon            153..210
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            211..343
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            344..555
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            556..688
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            689..786
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            787..916
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            917..1131
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            1132..1264
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            1265..1362
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            1363..1501
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            1502..1725
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            1726..1858
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            1859..1926
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     exon            1927..2247
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /inference="alignment:Splign:1.39.8"
+     STS             2083..2213
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /standard_name="SHGC-59619"
+                     /db_xref="UniSTS:7108"
+     STS             2112..2219
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+                     /standard_name="D4S2818"
+                     /db_xref="UniSTS:21848"
+     regulatory      2224..2229
+                     /regulatory_class="polyA_signal_sequence"
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+     polyA_site      2247
+                     /gene="ALB"
+                     /gene_synonym="ANALBA; FDAH; PRO0883; PRO0903; PRO1341"
+ORIGIN      
+        1 agtatattag tgctaatttc cctccgtttg tcctagcttt tctcttctgt caaccccaca
+       61 cgcctttggc acaatgaagt gggtaacctt tatttccctt ctttttctct ttagctcggc
+      121 ttattccagg ggtgtgtttc gtcgagatgc acacaagagt gaggttgctc atcggtttaa
+      181 agatttggga gaagaaaatt tcaaagcctt ggtgttgatt gcctttgctc agtatcttca
+      241 gcagtgtcca tttgaagatc atgtaaaatt agtgaatgaa gtaactgaat ttgcaaaaac
+      301 atgtgttgct gatgagtcag ctgaaaattg tgacaaatca cttcataccc tttttggaga
+      361 caaattatgc acagttgcaa ctcttcgtga aacctatggt gaaatggctg actgctgtgc
+      421 aaaacaagaa cctgagagaa atgaatgctt cttgcaacac aaagatgaca acccaaacct
+      481 cccccgattg gtgagaccag aggttgatgt gatgtgcact gcttttcatg acaatgaaga
+      541 gacatttttg aaaaaatact tatatgaaat tgccagaaga catccttact tttatgcccc
+      601 ggaactcctt ttctttgcta aaaggtataa agctgctttt acagaatgtt gccaagctgc
+      661 tgataaagct gcctgcctgt tgccaaagct cgatgaactt cgggatgaag ggaaggcttc
+      721 gtctgccaaa cagagactca agtgtgccag tctccaaaaa tttggagaaa gagctttcaa
+      781 agcatgggca gtagctcgcc tgagccagag atttcccaaa gctgagtttg cagaagtttc
+      841 caagttagtg acagatctta ccaaagtcca cacggaatgc tgccatggag atctgcttga
+      901 atgtgctgat gacagggcgg accttgccaa gtatatctgt gaaaatcaag attcgatctc
+      961 cagtaaactg aaggaatgct gtgaaaaacc tctgttggaa aaatcccact gcattgccga
+     1021 agtggaaaat gatgagatgc ctgctgactt gccttcatta gctgctgatt ttgttgaaag
+     1081 taaggatgtt tgcaaaaact atgctgaggc aaaggatgtc ttcctgggca tgtttttgta
+     1141 tgaatatgca agaaggcatc ctgattactc tgtcgtgctg ctgctgagac ttgccaagac
+     1201 atatgaaacc actctagaga agtgctgtgc cgctgcagat cctcatgaat gctatgccaa
+     1261 agtgttcgat gaatttaaac ctcttgtgga agagcctcag aatttaatca aacaaaattg
+     1321 tgagcttttt gagcagcttg gagagtacaa attccagaat gcgctattag ttcgttacac
+     1381 caagaaagta ccccaagtgt caactccaac tcttgtagag gtctcaagaa acctaggaaa
+     1441 agtgggcagc aaatgttgta aacatcctga agcaaaaaga atgccctgtg cagaagacta
+     1501 tctatccgtg gtcctgaacc agttatgtgt gttgcatgag aaaacgccag taagtgacag
+     1561 agtcaccaaa tgctgcacag aatccttggt gaacaggcga ccatgctttt cagctctgga
+     1621 agtcgatgaa acatacgttc ccaaagagtt taatgctgaa acattcacct tccatgcaga
+     1681 tatatgcaca ctttctgaga aggagagaca aatcaagaaa caaactgcac ttgttgagct
+     1741 cgtgaaacac aagcccaagg caacaaaaga gcaactgaaa gctgttatgg atgatttcgc
+     1801 agcttttgta gagaagtgct gcaaggctga cgataaggag acctgctttg ccgaggaggg
+     1861 taaaaaactt gttgctgcaa gtcaagctgc cttaggctta taacatcaca tttaaaagca
+     1921 tctcagccta ccatgagaat aagagaaaga aaatgaagat caaaagctta ttcatctgtt
+     1981 tttctttttc gttggtgtaa agccaacacc ctgtctaaaa aacataaatt tctttaatca
+     2041 ttttgcctct tttctctgtg cttcaattaa taaaaaatgg aaagaatcta atagagtggt
+     2101 acagcactgt tatttttcaa agatgtgttg ctatcctgaa aattctgtag gttctgtgga
+     2161 agttccagtg ttctctctta ttccacttcg gtagaggatt tctagtttct tgtgggctaa
+     2221 ttaaataaat cattaatact cttctaaaaa aaaaaaaaaa aaaa
+//
+
