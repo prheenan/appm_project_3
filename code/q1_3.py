@@ -102,9 +102,9 @@ def plotBinomials(dataMatrix,nVals,p):
     pPlotUtil.savefig(fig,outDir + "MeanVar")
 
 
-_nVals = np.array([10,20,50,75,100,150,200,350,500])
+_nVals = np.array([10,20,50,75,100,150,200,350,500,1000])
 pGenUtil.ensureDirExists(outDir)
 _p=1/3.
-_nPoints = 1e4
+_nPoints = 1e5
 dataMatrix = getBinomials(_nVals,_p,_nPoints)
 plotBinomials(dataMatrix,_nVals,_p)
