@@ -15,7 +15,7 @@ sys.path.append(path)
 import GenUtilities  as pGenUtil
 import PlotUtilities as pPlotUtil
 import CheckpointUtilities as pCheckUtil
-from q1_3 import getDeltaModel,q12Dist
+from q1_3 import getDeltaStats,q12Dist
 
 # import biopython stuff
 from Bio.Seq import Seq
@@ -120,45 +120,53 @@ def printAminoInfo(piA,chars):
     delim = "\t\t"
     print("Nucleotide \t" + delim.join(chars))
     for i,row in enumerate(piA):
-        print("Position {:d}\t".format(i) + delim.join("{:.4g}".format(r) for r in row))
+        print("Position {:d}\t".format(i) + 
+              delim.join("{:.4g}".format(r) for r in row))
 
 
-def get1981ModelCodonPos(piA,D,length):
+def get1981ModelCodonPos(piA,D,length,lambdaV,tau):
     # piA is the proportion of base, row for each codon position, 
     # column for each {A,T,G,C}
     # D is the total count of bases. 
     codonSize = 3
     H = np.zeros(codonSize)
     H[:] = np.sum(piA * (1-piA),axis=1) # use [:] to make sure no funny indexing
-    xVals = D/(H*length)
-    # Posada, Selecting models of evolution, Chapter 10, Figure 10.3
-    # If we model serum albumin as ~ hemoglobin...
-    # tau < 100 Millon years (mammals)
-    tau = 1e8
-    # substitutions: after 100 million years, expect 60 substitutions per 100
-    # residues. so 0.6 e-8 / residue per unit time
-    lambdaV = 0.6e-8
+    xVals = D/(H)
     p = (1 - np.exp(-2*lambdaV * tau)) * H
-    print('prob')
-    print(p)
-    print("H")
-    print(H)
     n = lenV
     mFunc = lambda x: q12Dist(x,normalizer=H)
-    dist,distMean,distVar,normalDist,normalStd = \
-            getDeltaModel(n,p,xVals,distFunc=mFunc,normMean=False)
-    print('dist')
-    print(dist)
-    print('distMean')
-    print(distMean)
-    print('distVar')
-    print(distVar)
-    print(normalDist)
-    print(normalStd)
-    
+    gXBar,gMu,normalStd = getDeltaStats(n,p,xVals,distFunc=mFunc)
+    return gXBar,gMu,normalStd
 
+def plotAll(outDir,gXBar,gMu,normalStd,lambdaV,tau):
+    fig = plt.figure()
+    fontSize = 18
+    positionX = np.arange(gXBar.size)
+    plt.plot(positionX,gXBar,'ro',label="Data for K-hat")
+    plt.errorbar(x=positionX,y=gMu,yerr=normalStd,fmt='bx',
+                 label="Theory")
+    plt.xlabel("Position on codon",fontsize=fontSize)
+    plt.ylabel("K-hat, E[substitutions/homologous base].",
+               fontsize=fontSize)
+    plt.legend(loc='best',fontsize=fontSize)
+    fudge = 0.1
+    plt.xlim([-fudge,max(positionX)+fudge])
+    plt.title("K-hat versus expected K \n"+
+              "lambda={:.3g}[1/year], tau={:.3g}[years]".\
+              format(lambdaV,tau),fontsize=fontSize)
+    pPlotUtil.savefig(fig,outDir + "q2_4_Khat")
+    delim = "\t"
+    print(delim.join(["Pos","K-Hat","g(mu)(var)"]))
+    for i,(measured,theoryMean,theoryStd) \
+        in enumerate(zip(gXBar,gMu,normalStd)):
+        vals = [i,measured,theoryMean,theoryStd,theoryStd**2]
+        print("{:d}\t{:.3g}\t{:.3g}({:.3g})".format(i,measured,
+                                                    theoryMean,theoryStd))
+    
 if __name__ == '__main__':
     dataDir = "../data/"
+    outDir = "./out/"
+    pGenUtil.ensureDirExists(outDir)
     files = ['sequence_human',
              'sequence_rat']
     fileEx = ".gb"
@@ -170,6 +178,13 @@ if __name__ == '__main__':
     determineTx = True
     printPiA = False
     seqAlignFile = "tx_align.fasta"
+    # Posada, Selecting models of evolution, Chapter 10, Figure 10.3
+    # If we model serum albumin as ~ hemoglobin...
+    # tau < 100 Millon years (mammals)
+    tau = 80e6
+    # substitutions: after 100 million years, expect 50 substitutions per 100
+    # residues. so 0.5 /tau residue per unit time
+    lambdaV = (50/100) * (1/tau)
     # generate the files for nucleotides translated (tx) coding sequences
     if determineTx:
         cdsSeq,cdsTx = saveTranslatedNucleotides(files,fileLabels,dataDir,
@@ -186,7 +201,9 @@ if __name__ == '__main__':
         # nucleic acid, D, and l fo the Felsenstein 1981 model
         piA,dMismatch,lenV = getNonGapProportions(pairwiseFile,nucleoAlign,
                                                   aminoAlign,chars)
-        get1981ModelCodonPos(piA,dMismatch,lenV)
+        gXBar,gMu,normalStd = get1981ModelCodonPos(piA,dMismatch,
+                                                   lenV,lambdaV,tau)
+        plotAll(outDir,gXBar,gMu,normalStd,lambdaV,tau)
     if (printPiA):
         printAminoInfo(piA,chars)
 

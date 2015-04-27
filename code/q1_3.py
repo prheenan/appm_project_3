@@ -13,6 +13,7 @@ from scipy.stats import norm
 outDir = "./out/"
 g_title = 20
 g_label = 18
+fontsize=g_label
 
 def getBinomials(nVals,p,nPoints):
     nTrials = nVals.size
@@ -30,18 +31,19 @@ def normHist(data,bins,**kwargs):
     plt.bar(left=bins[:-1],height=norm,width=np.diff(bins),**kwargs)
     return norm
 
-def getDeltaStats(n,p,xTrials,distFunc = q12Dist):
+def getDeltaStats(n,p,xTrials,distFunc):
     mu = n*p
     sigma= np.sqrt(p*(1-p))
     gMu = q12Dist(p)
     gPrimeMu = (1/(1-p/2) )
+    gXBar = distFunc(xTrials/n) 
     normalStd = abs(gPrimeMu) * sigma / np.sqrt(n)
-    return gMu,gPrimeMu,normalStd
+    return gXBar,gMu,normalStd
 
 def getDeltaModel(n,p,xTrials,distFunc = q12Dist,normMean=True):
-    gMu, gPrimeMu, normalStd = getDeltaStats(n,p,xTrials,distFunc = q12Dist)
+    gXBar,gMu, normalStd = getDeltaStats(n,p,xTrials,distFunc = q12Dist)
     normalDist = norm(loc=0,scale=normalStd)
-    dist = (distFunc(xTrials/n) - (gMu))
+    dist = (gXBar- (gMu))
     distMean = np.mean(dist)
     distVar = np.std(dist)**2
     return dist,distMean,distVar,normalDist,normalStd
@@ -83,6 +85,7 @@ def plotSingleHist(n,p,xTrials,outDir):
     catArr = list(rawPDF) + list(normV)
     plt.ylim([0,max(catArr)*1.2])
     plt.xlim([-max(nBins),max(nBins)])
+    pPlotUtil.tickAxisFont()
     pPlotUtil.savefig(fig,outDir + "trial_n{:d}".format(int(n)))
     #return the statistics for plotting
     return distMean,distVar,normalStd**2
@@ -99,22 +102,24 @@ def plotBinomials(dataMatrix,nVals,p):
     # plot the means and variances
     fig = pPlotUtil.figure()
     plt.subplot(1,2,1)
-    plt.title("Mean of g(xBar)\n approaches expected")
+    plt.title("Mean of g(xBar)\n approaches expected",fontsize=fontsize)
     expMean = 0
     plt.plot(nVals,means,'ko',label="Actual Mean")
     plt.axhline(expMean,color='b',linestyle='--',
                 label="Expected Mean: {:.2g}".format(expMean))
     plt.ylim(-min(means),max(means)*1.1)
-    plt.xlabel("Value of n for binomial")
-    plt.ylabel("Value of g(xBar)")
-    plt.legend()
+    plt.xlabel("Value of n for binomial",fontsize=fontsize)
+    plt.ylabel("Value of g(xBar)",fontsize=fontsize)
+    plt.legend(fontsize=fontsize)
+    pPlotUtil.tickAxisFont()
     plt.subplot(1,2,2)
     plt.semilogy(nVals,varReal,'ko',label="Actual Variance")
     plt.semilogy(nVals,varDist,'b--',label="Expected Variance")    
-    plt.title("Variance of g(x)-g(mu)\n approaches expected")
-    plt.xlabel("Value of n for binomial")
-    plt.ylabel("Value of g(x) variance")
-    plt.legend()
+    plt.title("Variance of g(x)-g(mu)\n approaches expected",fontsize=fontsize)
+    plt.xlabel("Value of n for binomial",fontsize=fontsize)
+    plt.ylabel("Value of g(x) variance",fontsize=fontsize)
+    pPlotUtil.tickAxisFont()
+    plt.legend(fontsize=fontsize)
     pPlotUtil.savefig(fig,outDir + "MeanVar")
 
 if __name__ == '__main__':
