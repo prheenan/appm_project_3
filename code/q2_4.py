@@ -51,16 +51,17 @@ def getSeqAndCDS(fileName):
     cdsSlice = slice(startCDS,endCDS)
     return seq,cdsSlice,translatedDNA
 
-def saveTranslatedNucleotides(files,labels,dataDir,fileEx):
+def saveTranslatedNucleotides(files,labels,dataDir,fileEx,printV=False):
     seqToAlign = []
     seqTxToAlign = []
     for f,label in zip(files,labels):
         txFileSave = dataDir + f + "_tx.fasta"
         seq, cds,tx =  getSeqAndCDS(dataDir + f + fileEx)
         cdsLen = len(seq)
-        print(("{:s}({:s}) has cds of (zero indexed) {:s}, CDS(len {:d})."+
-               " Tx to (saving as {:s}_tx.fasta)").\
-              format(label,f,cds,cdsLen,txFileSave))
+        if (printV):
+            print(("{:s}({:s}) has cds of (zero indexed) {:s}, CDS(len {:d})."+
+                   " Tx to (saving as {:s}_tx.fasta)").\
+                  format(label,f,cds,cdsLen,txFileSave))
         with open(txFileSave,'w') as fh:
             record = SeqRecord(Seq(tx,IUPAC.protein),
                    id=f)
@@ -123,21 +124,34 @@ def printAminoInfo(piA,chars):
 
 
 def get1981ModelCodonPos(piA,D,length):
-    # piA is the proportion of base, row for each codon position, column for each {A,T,G,C}
+    # piA is the proportion of base, row for each codon position, 
+    # column for each {A,T,G,C}
     # D is the total count of bases. 
     codonSize = 3
     H = np.zeros(codonSize)
     H[:] = np.sum(piA * (1-piA),axis=1) # use [:] to make sure no funny indexing
     xVals = D/(H*length)
-    # XXX fix these...
-    tau = 1
-    lambdaV = 1
+    # Posada, Selecting models of evolution, Chapter 10, Figure 10.3
+    # If we model serum albumin as ~ hemoglobin...
+    # tau < 100 Millon years (mammals)
+    tau = 1e8
+    # substitutions: after 100 million years, expect 60 substitutions per 100
+    # residues. so 0.6 e-8 / residue per unit time
+    lambdaV = 0.6e-8
     p = (1 - np.exp(-2*lambdaV * tau)) * H
+    print('prob')
+    print(p)
+    print("H")
+    print(H)
     n = lenV
+    mFunc = lambda x: q12Dist(x,normalizer=H)
     dist,distMean,distVar,normalDist,normalStd = \
-            getDeltaModel(n,p,xVals,distFunc= lambda x: q12Dist(x,normalizer=H))
+            getDeltaModel(n,p,xVals,distFunc=mFunc,normMean=False)
+    print('dist')
     print(dist)
+    print('distMean')
     print(distMean)
+    print('distVar')
     print(distVar)
     print(normalDist)
     print(normalStd)
@@ -154,6 +168,7 @@ if __name__ == '__main__':
     chars = ['A','C','G','T']
     determineMSA = True
     determineTx = True
+    printPiA = False
     seqAlignFile = "tx_align.fasta"
     # generate the files for nucleotides translated (tx) coding sequences
     if determineTx:
@@ -171,8 +186,10 @@ if __name__ == '__main__':
         # nucleic acid, D, and l fo the Felsenstein 1981 model
         piA,dMismatch,lenV = getNonGapProportions(pairwiseFile,nucleoAlign,
                                                   aminoAlign,chars)
-        printAminoInfo(piA,chars)
         get1981ModelCodonPos(piA,dMismatch,lenV)
+    if (printPiA):
+        printAminoInfo(piA,chars)
+
 
         
 

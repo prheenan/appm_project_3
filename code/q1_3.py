@@ -30,25 +30,24 @@ def normHist(data,bins,**kwargs):
     plt.bar(left=bins[:-1],height=norm,width=np.diff(bins),**kwargs)
     return norm
 
-def getDeltaModel(n,p,xTrials,distFunc = q12Dist,normMean=True):
+def getDeltaStats(n,p,xTrials,distFunc = q12Dist):
     mu = n*p
     sigma= np.sqrt(p*(1-p))
     gMu = q12Dist(p)
     gPrimeMu = (1/(1-p/2) )
     normalStd = abs(gPrimeMu) * sigma / np.sqrt(n)
-    if (normMean):
-        mean = 0
-    else:
-        mean = gMu
-    normalDist = norm(loc=mean,scale=normalStd)
-    dist = (distFunc(xTrials/n) - (gMu-mean))
+    return gMu,gPrimeMu,normalStd
+
+def getDeltaModel(n,p,xTrials,distFunc = q12Dist,normMean=True):
+    gMu, gPrimeMu, normalStd = getDeltaStats(n,p,xTrials,distFunc = q12Dist)
+    normalDist = norm(loc=0,scale=normalStd)
+    dist = (distFunc(xTrials/n) - (gMu))
     distMean = np.mean(dist)
     distVar = np.std(dist)**2
     return dist,distMean,distVar,normalDist,normalStd
 
 def getDeltaModelDistr(n,p,xTrials,coverage=10):
     # distFunc; what to call to get the distribution
-
     # n/p is the number of possible values for anything in xTrials
     # taking the log ceiling of this gives an upper bound for the number 
     # of bins for the log of xTrials
@@ -60,12 +59,13 @@ def getDeltaModelDistr(n,p,xTrials,coverage=10):
     nBins = np.arange(-max(dist),max(dist),minStep)
     return dist,distMean,distVar,normalStd,normalDist,xVals,nBins
 
-def plotSingleHist(xTrials,n,p,outDir):
+def plotSingleHist(n,p,xTrials,outDir):
     # coverage is just a plotting artifact
     fig = pPlotUtil.figure()
     # mu: expected value of Binomial(n,p)
     # effectie variance
-    dist,distMean,distVar,normalStd,normalDist,xVals,nBins = getDeltaModelDistr(n,p,xTrials)
+    dist,distMean,distVar,normalStd,normalDist,xVals,nBins = \
+                            getDeltaModelDistr(n,p,xTrials)
     normV = normHist(dist,nBins,\
                      label=("Actual Distr: Mean={:.4f},Stdev={:.4f}").\
                      format(distMean,np.sqrt(distVar)))
@@ -95,7 +95,7 @@ def plotBinomials(dataMatrix,nVals,p):
     varDist = np.zeros(nTrials)
     for i,n in enumerate(nVals):
         means[i],varReal[i],varDist[i] =\
-                    plotSingleHist(dataMatrix[i,:],n,p,outDir)
+                    plotSingleHist(n,p,dataMatrix[i,:],outDir)
     # plot the means and variances
     fig = pPlotUtil.figure()
     plt.subplot(1,2,1)
