@@ -115,6 +115,13 @@ def getNonGapProportions(pairwiseFile,alignToNucleo,alignToTranslated,chars):
     dTotal = np.sum(dMismatch,axis=1)
     return propTotal,dTotal,compareLen
 
+def printAminoInfo(piA,chars):
+    delim = "\t\t"
+    print("Nucleotide \t" + delim.join(chars))
+    for i,row in enumerate(piA):
+        print("Position {:d}\t".format(i) + delim.join("{:.4g}".format(r) for r in row))
+
+
 def get1981ModelCodonPos(piA,D,length):
     # piA is the proportion of base, row for each codon position, column for each {A,T,G,C}
     # D is the total count of bases. 
@@ -144,7 +151,7 @@ if __name__ == '__main__':
     # XXX make these labels better?
     fileLabels = ["human","rat"]
     # nucleotides
-    chars = ['A','T','G','C']
+    chars = ['A','C','G','T']
     determineMSA = True
     determineTx = True
     seqAlignFile = "tx_align.fasta"
@@ -163,7 +170,8 @@ if __name__ == '__main__':
         # get piA, the number of proportion of each matched or mismatched
         # nucleic acid, D, and l fo the Felsenstein 1981 model
         piA,dMismatch,lenV = getNonGapProportions(pairwiseFile,nucleoAlign,
-                                                 aminoAlign,chars)
+                                                  aminoAlign,chars)
+        printAminoInfo(piA,chars)
         get1981ModelCodonPos(piA,dMismatch,lenV)
 
         
