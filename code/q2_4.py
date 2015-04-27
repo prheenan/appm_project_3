@@ -181,9 +181,8 @@ def plotAll(outDir,gXBar,gMu,normalStd,lambdaV,tau):
     print(delim.join(["Pos","K-Hat","g(mu)(var)"]))
     for i,(measured,theoryMean,theoryStd) \
         in enumerate(zip(gXBar,gMu,normalStd)):
-        vals = [i,measured,theoryMean,theoryStd,theoryStd**2]
         print("{:d}\t{:.3g}\t{:.3g}({:.3g})".format(i,measured,
-                                                    theoryMean,theoryStd))
+                                                    theoryMean,theoryStd**2))
     
 if __name__ == '__main__':
     dataDir = "../data/"
