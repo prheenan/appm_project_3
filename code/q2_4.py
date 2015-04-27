@@ -23,6 +23,7 @@ from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import IUPAC
 from Bio import pairwise2
+from collections import Counter
 
 def getCDS(record):
     # more or less copied from here:
@@ -57,8 +58,8 @@ def saveTranslatedNucleotides(files,labels,dataDir,fileEx):
         seq, cds,tx =  getSeqAndCDS(dataDir + f + fileEx)
         cdsLen = len(seq)
         print(("{:s}({:s}) has cds of (zero indexed) {:s}, CDS(len {:d})."+
-               " Tx to (saving as {:s}_tx.fasta): \n{:s}").\
-              format(label,f,cds,cdsLen,txFileSave,tx))
+               " Tx to (saving as {:s}_tx.fasta)").\
+              format(label,f,cds,cdsLen,txFileSave))
         with open(txFileSave,'w') as fh:
             record = SeqRecord(Seq(tx,IUPAC.protein),
                    id=f)
@@ -66,14 +67,55 @@ def saveTranslatedNucleotides(files,labels,dataDir,fileEx):
         seqToAlign.append(seq)
         seqTxToAlign.append(tx)
     return seqToAlign,seqTxToAlign
+    
+def getProportionsAtIdx(idx,seq,chars,normalize):
+    seqTmp = seq.upper()
+    seqTmp = str([seqTmp[i] for i in idx])
+    counts = np.array([seqTmp.count(c) for c in chars])
+    props = counts / normalize
+    return props
 
-def getNonGapProportions(pairwiseFile,alignToNucleo,alignToTranslated):
+def getNonGapProportions(pairwiseFile,alignToNucleo,alignToTranslated,chars):
     seqAlign,rec = getSequenceAndRec(pairwiseFile,'fasta')
-    gap = " "
+    compareLen = min(len(seqAlign),len(alignToTranslated))
     # go through all the matching or mismatched codons.
-    matchOrMisMatchIdx = [ i for i,v in enumerate(seqAlign)
-                           if seqAlign != gap ] 
+    nucleoCompare = seqAlign[:compareLen]
+    originalCompare = alignToTranslated[:compareLen]
+    # XXX assume gaps are ' ' for now...
+    gapStr = " " 
+    # check that (1) not looking at a gap (2) our condition (match/mis) is true
+    genIdx = lambda condition : \
+             [i for i in range(compareLen) 
+              if ( (nucleoCompare[i] != gapStr) and
+                   condition(nucleoCompare[i],originalCompare[i]))]
+    matchIdx = genIdx(lambda s1,s2: s1 == s2)
+    mismatchIdx = genIdx(lambda s1,s2: s1 != s2)
+    matchOrMisIdx = matchIdx + mismatchIdx
+    assert (len(matchIdx) + len(mismatchIdx)) ==  compareLen
+    assert (set(matchIdx) & set(mismatchIdx)) == set()
+    # normalize by the total number of nucleotides at codon 'i' (equiv to
+    # total number of amino acids)
+    nAminoAcids = compareLen
+    codonSize = 3
+    # Pi_a
+    propTotal = np.zeros((codonSize,len(chars)))
+    # D : number of mismatches 
+    dMismatch = np.zeros((codonSize,len(chars)))
+    idxTx = lambda x,offset: np.array(x)*codonSize+offset
+    for offset in range(codonSize):
+        # transform the index into what we want
+        allIdx = idxTx(matchOrMisIdx,offset)
+        propTotal[offset,:] = getProportionsAtIdx(allIdx,alignToNucleo,
+                                                  chars,nAminoAcids)
+        misIdx = idxTx(mismatchIdx,offset)
+        # use a normalization of one, so we just get D 
+        dMismatch[offset,:] = getProportionsAtIdx(misIdx,alignToNucleo,
+                                                     chars,1)
+    dTotal = np.sum(dMismatch,axis=1)
+    return propTotal,dTotal,compareLen
 
+def getFelsensteinModel():
+    
 
 if __name__ == '__main__':
     dataDir = "../data/"
@@ -82,19 +124,30 @@ if __name__ == '__main__':
     fileEx = ".gb"
     # XXX make these labels better?
     fileLabels = ["human","rat"]
+    # nucleotides
+    chars = ['A','T','G','C']
     determineMSA = True
+    determineTx = True
     seqAlignFile = "tx_align.fasta"
     # generate the files for nucleotides translated (tx) coding sequences
-    cdsSeq,cdsTx = saveTranslatedNucleotides(files,fileLabels,dataDir,fileEx)
-    if (determineMSA):
-        # choose the smaller index...
+    if determineTx:
+        cdsSeq,cdsTx = saveTranslatedNucleotides(files,fileLabels,dataDir,
+                                                 fileEx)
+    if determineMSA:
+        # choose the index for human...
         idxToChoose = fileLabels.index('human')
         nucleoAlign = cdsSeq[idxToChoose]
         aminoAlign = cdsTx[idxToChoose]
         # use the BLAST file to figure out the 'pi' vector 
         # (propoprtion of bases)
         pairwiseFile = dataDir + seqAlignFile 
-        getNonGapProportions(pairwiseFile,nucleoAlign,aminoAlign)
+        # get piA, the number of proportion of each matched or mismatched
+        # nucleic acid, D, and l fo the Felsenstein 1981 model
+        piA,dMismatch,lenV = getNonGapProportions(pairwiseFile,nucleoAlign,
+                                                 aminoAlign,chars)
+        print(piA)
+        print(dMismatch)
+        print(lenV)
         
 
     
