@@ -36,8 +36,7 @@ def getCDS(record):
             cdsObj =feature.location
             # for some reason, getting the translation is hairy.
             # returns an array, get the first element to get the string
-            translatedDNA = feature.qualifiers['translation'][0]
-            return cdsObj.start,cdsObj.end,translatedDNA
+            return int(cdsObj.start),int(cdsObj.end)
 
 def getSequenceAndRec(fileName,formatIO="genbank"):
     with open(fileName, "r") as handle:
@@ -47,21 +46,38 @@ def getSequenceAndRec(fileName,formatIO="genbank"):
 
 def getSeqAndCDS(fileName):
     seq,record = getSequenceAndRec(fileName)
-    startCDS,endCDS,translatedDNA = getCDS(record)
+    startCDS,endCDS = getCDS(record)
     cdsSlice = slice(startCDS,endCDS)
-    return seq,cdsSlice,translatedDNA
+    cdsStr = seq[cdsSlice]
+    cdsSeq = Seq(cdsStr)
+    translatedDNA = str(cdsSeq.translate())
+    return seq,cdsSlice,translatedDNA,startCDS,endCDS
 
-def saveTranslatedNucleotides(files,labels,dataDir,fileEx,printV=False):
+def saveTranslatedNucleotides(files,labels,dataDir,fileEx,printV=True):
     seqToAlign = []
     seqTxToAlign = []
     for f,label in zip(files,labels):
         txFileSave = dataDir + f + "_tx.fasta"
-        seq, cds,tx =  getSeqAndCDS(dataDir + f + fileEx)
-        cdsLen = len(seq)
+        seq, cds,tx,cdsI,cdsF =  getSeqAndCDS(dataDir + f + fileEx)
+        cdsLen = len(seq[cds])
+        seqLen = len(seq)
+        utr5Len = cdsI
+        utr3Len = seqLen-cdsLen-utr5Len
+        cdsArr = [cdsI,cdsF]
+        utr5=[0,cdsI-1]
+        utr3=[cdsF,seqLen]
         if (printV):
-            print(("{:s}({:s}) has cds of (zero indexed) {:s}, CDS(len {:d})."+
-                   " Tx to (saving as {:s}_tx.fasta)").\
-                  format(label,f,cds,cdsLen,txFileSave))
+            print(("{:s}({:s})\n" +
+                   "\t5'UTR: {:s}, Len {:d}\n"+
+                   "\tCDS  : {:s}, Len {:d}\n"+
+                   "\t3'UTR: {:s}, Len {:d}\n"+
+                   "\tTotal Len        {:d}\n"+
+                   "\tTx (len {:d}) saved as {:s}_tx.fasta)").\
+                  format(label,f,
+                         utr5,utr5Len,
+                         cdsArr,cdsLen,
+                         utr3,utr3Len,seqLen,
+                         len(tx),txFileSave))
         with open(txFileSave,'w') as fh:
             record = SeqRecord(Seq(tx,IUPAC.protein),
                    id=f)
@@ -80,24 +96,27 @@ def getProportionsAtIdx(idx,seq,chars,normalize):
 def getNonGapProportions(pairwiseFile,alignToNucleo,alignToTranslated,chars):
     seqAlign,rec = getSequenceAndRec(pairwiseFile,'fasta')
     compareLen = min(len(seqAlign),len(alignToTranslated))
+    maxStrLen = max(len(seqAlign),len(alignToTranslated))
     # go through all the matching or mismatched codons.
     nucleoCompare = seqAlign[:compareLen]
     originalCompare = alignToTranslated[:compareLen]
-    # XXX assume gaps are ' ' for now...
+    # XXX assume gaps are '*' for now...
     gapStr = " " 
     # check that (1) not looking at a gap (2) our condition (match/mis) is true
     genIdx = lambda condition : \
              [i for i in range(compareLen) 
               if ( (nucleoCompare[i] != gapStr) and
                    condition(nucleoCompare[i],originalCompare[i]))]
+    nGaps = nucleoCompare.count(gapStr) + \
+            maxStrLen-compareLen
     matchIdx = genIdx(lambda s1,s2: s1 == s2)
     mismatchIdx = genIdx(lambda s1,s2: s1 != s2)
     matchOrMisIdx = matchIdx + mismatchIdx
-    assert (len(matchIdx) + len(mismatchIdx)) ==  compareLen
+    assert (len(matchOrMisIdx)) ==  maxStrLen-nGaps
     assert (set(matchIdx) & set(mismatchIdx)) == set()
     # normalize by the total number of nucleotides at codon 'i' (equiv to
     # total number of amino acids)
-    nAminoAcids = compareLen
+    nAminoAcids = compareLen-nGaps
     codonSize = 3
     # Pi_a
     propTotal = np.zeros((codonSize,len(chars)))
@@ -114,7 +133,11 @@ def getNonGapProportions(pairwiseFile,alignToNucleo,alignToTranslated,chars):
         dMismatch[offset,:] = getProportionsAtIdx(misIdx,alignToNucleo,
                                                      chars,1)
     dTotal = np.sum(dMismatch,axis=1)
-    return propTotal,dTotal,compareLen
+    print("{:d} gaps".format(nGaps))
+    print("{:d} matches".format(len(matchIdx)))
+    print("{:d} mismatches".format(len(mismatchIdx)))
+    print("{:d} total matches and mismatches".format(len(matchOrMisIdx)))
+    return propTotal,dTotal,nAminoAcids
 
 def printAminoInfo(piA,chars):
     delim = "\t\t"
@@ -122,7 +145,6 @@ def printAminoInfo(piA,chars):
     for i,row in enumerate(piA):
         print("Position {:d}\t".format(i) + 
               delim.join("{:.4g}".format(r) for r in row))
-
 
 def get1981ModelCodonPos(piA,D,length,lambdaV,tau):
     # piA is the proportion of base, row for each codon position, 
@@ -176,10 +198,10 @@ if __name__ == '__main__':
     chars = ['A','C','G','T']
     determineMSA = True
     determineTx = True
-    printPiA = False
+    printPiA = True
     seqAlignFile = "tx_align.fasta"
     # Posada, Selecting models of evolution, Chapter 10, Figure 10.3
-    # If we model serum albumin as ~ hemoglobin...
+    # If we model serum albumin as ~ ...
     # tau < 100 Millon years (mammals)
     tau = 80e6
     # substitutions: after 100 million years, expect 50 substitutions per 100
