@@ -15,6 +15,7 @@ sys.path.append(path)
 import GenUtilities  as pGenUtil
 import PlotUtilities as pPlotUtil
 import CheckpointUtilities as pCheckUtil
+from q1_3 import getDeltaModel,q12Dist
 
 # import biopython stuff
 from Bio.Seq import Seq
@@ -114,7 +115,25 @@ def getNonGapProportions(pairwiseFile,alignToNucleo,alignToTranslated,chars):
     dTotal = np.sum(dMismatch,axis=1)
     return propTotal,dTotal,compareLen
 
-def getFelsensteinModel():
+def get1981ModelCodonPos(piA,D,length):
+    # piA is the proportion of base, row for each codon position, column for each {A,T,G,C}
+    # D is the total count of bases. 
+    codonSize = 3
+    H = np.zeros(codonSize)
+    H[:] = np.sum(piA * (1-piA),axis=1) # use [:] to make sure no funny indexing
+    xVals = D/(H*length)
+    # XXX fix these...
+    tau = 1
+    lambdaV = 1
+    p = (1 - np.exp(-2*lambdaV * tau)) * H
+    n = lenV
+    dist,distMean,distVar,normalDist,normalStd = \
+            getDeltaModel(n,p,xVals,distFunc= lambda x: q12Dist(x,normalizer=H))
+    print(dist)
+    print(distMean)
+    print(distVar)
+    print(normalDist)
+    print(normalStd)
     
 
 if __name__ == '__main__':
@@ -145,9 +164,8 @@ if __name__ == '__main__':
         # nucleic acid, D, and l fo the Felsenstein 1981 model
         piA,dMismatch,lenV = getNonGapProportions(pairwiseFile,nucleoAlign,
                                                  aminoAlign,chars)
-        print(piA)
-        print(dMismatch)
-        print(lenV)
+        get1981ModelCodonPos(piA,dMismatch,lenV)
+
         
 
     

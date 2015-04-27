@@ -30,32 +30,42 @@ def normHist(data,bins,**kwargs):
     plt.bar(left=bins[:-1],height=norm,width=np.diff(bins),**kwargs)
     return norm
 
-def getDeltaModelDistr(p,n,xTrials,distFunc = q12Dist,coverage=10):
-    # distFunc; what to call to get the distribution
+def getDeltaModel(n,p,xTrials,distFunc = q12Dist,normMean=True):
     mu = n*p
     sigma= np.sqrt(p*(1-p))
     gMu = q12Dist(p)
     gPrimeMu = (1/(1-p/2) )
     normalStd = abs(gPrimeMu) * sigma / np.sqrt(n)
-    normalDist = norm(loc=0,scale=normalStd)
-    dist = (distFunc(xTrials/n) - gMu)
+    if (normMean):
+        mean = 0
+    else:
+        mean = gMu
+    normalDist = norm(loc=mean,scale=normalStd)
+    dist = (distFunc(xTrials/n) - (gMu-mean))
+    distMean = np.mean(dist)
+    distVar = np.std(dist)**2
+    return dist,distMean,distVar,normalDist,normalStd
+
+def getDeltaModelDistr(n,p,xTrials,coverage=10):
+    # distFunc; what to call to get the distribution
+
     # n/p is the number of possible values for anything in xTrials
     # taking the log ceiling of this gives an upper bound for the number 
     # of bins for the log of xTrials
-    distMean = np.mean(dist)
-    distVar = np.std(dist)**2
+    dist,distMean,distVar,normalDist,normalStd = \
+                        getDeltaModel(n,p,xTrials)
     sortedUniDist = np.sort(np.unique(dist))
     minStep = np.min(np.abs(np.diff(sortedUniDist)))
     xVals = np.linspace(-max(dist),max(dist),2*coverage*max(dist)/minStep)
     nBins = np.arange(-max(dist),max(dist),minStep)
-    return xVals,dist,nBins,distMean,distVar,normalStd,normalDist
+    return dist,distMean,distVar,normalStd,normalDist,xVals,nBins
 
 def plotSingleHist(xTrials,n,p,outDir):
     # coverage is just a plotting artifact
     fig = pPlotUtil.figure()
     # mu: expected value of Binomial(n,p)
     # effectie variance
-    xVals,dist,nBins,distMean,distVar,normalStd,normalDist = getDeltaModelDistr(p,n,xTrials)
+    dist,distMean,distVar,normalStd,normalDist,xVals,nBins = getDeltaModelDistr(n,p,xTrials)
     normV = normHist(dist,nBins,\
                      label=("Actual Distr: Mean={:.4f},Stdev={:.4f}").\
                      format(distMean,np.sqrt(distVar)))
@@ -89,16 +99,17 @@ def plotBinomials(dataMatrix,nVals,p):
     # plot the means and variances
     fig = pPlotUtil.figure()
     plt.subplot(1,2,1)
-    plt.title("Mean of g(x)-g(mu)\n approaches 0")
-    plt.plot(nVals,means,'ko',label="Actual Mean",linewidth=0)
-    plt.axhline(0,color='b',linestyle='--',
-                label="Expected Mean")
-    plt.ylim(-np.mean(np.abs(means)),max(means)*1.1)
+    plt.title("Mean of g(xBar)\n approaches expected")
+    expMean = 0
+    plt.plot(nVals,means,'ko',label="Actual Mean")
+    plt.axhline(expMean,color='b',linestyle='--',
+                label="Expected Mean: {:.2g}".format(expMean))
+    plt.ylim(-min(means),max(means)*1.1)
     plt.xlabel("Value of n for binomial")
-    plt.ylabel("Value of g(x) mean")
+    plt.ylabel("Value of g(xBar)")
     plt.legend()
     plt.subplot(1,2,2)
-    plt.semilogy(nVals,varReal,'ko-',label="Actual Variance")
+    plt.semilogy(nVals,varReal,'ko',label="Actual Variance")
     plt.semilogy(nVals,varDist,'b--',label="Expected Variance")    
     plt.title("Variance of g(x)-g(mu)\n approaches expected")
     plt.xlabel("Value of n for binomial")
@@ -106,10 +117,10 @@ def plotBinomials(dataMatrix,nVals,p):
     plt.legend()
     pPlotUtil.savefig(fig,outDir + "MeanVar")
 
-
-_nVals = np.array([10,20,50,75,100,150,200,350,500,1000])
-pGenUtil.ensureDirExists(outDir)
-_p=1/3.
-_nPoints = 1e5
-dataMatrix = getBinomials(_nVals,_p,_nPoints)
-plotBinomials(dataMatrix,_nVals,_p)
+if __name__ == '__main__':
+    _nVals = np.array([10,20,50,75,100,150,200,350,500,1000])
+    pGenUtil.ensureDirExists(outDir)
+    _p=1/3.
+    _nPoints = 1e5
+    dataMatrix = getBinomials(_nVals,_p,_nPoints)
+    plotBinomials(dataMatrix,_nVals,_p)
