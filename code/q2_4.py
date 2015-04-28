@@ -112,11 +112,12 @@ def getNonGapProportions(pairwiseFile,alignToNucleo,alignToTranslated,chars):
     matchIdx = genIdx(lambda s1,s2: s1 == s2)
     mismatchIdx = genIdx(lambda s1,s2: s1 != s2)
     matchOrMisIdx = matchIdx + mismatchIdx
-    assert (len(matchOrMisIdx)) ==  maxStrLen-nGaps
+    nMatchMisMatch = len(matchOrMisIdx)
+    assert (nMatchMisMatch) ==  maxStrLen-nGaps
     assert (set(matchIdx) & set(mismatchIdx)) == set()
     # normalize by the total number of nucleotides at codon 'i' (equiv to
     # total number of amino acids)
-    nAminoAcids = compareLen-nGaps
+    nAminoAcids = maxStrLen-nGaps
     codonSize = 3
     # Pi_a
     propTotal = np.zeros((codonSize,len(chars)))
@@ -132,12 +133,13 @@ def getNonGapProportions(pairwiseFile,alignToNucleo,alignToTranslated,chars):
         # use a normalization of one, so we just get D 
         dMismatch[offset,:] = getProportionsAtIdx(misIdx,alignToNucleo,
                                                      chars,1)
+        
     dTotal = np.sum(dMismatch,axis=1)
     print("{:d} gaps".format(nGaps))
     print("{:d} matches".format(len(matchIdx)))
     print("{:d} mismatches".format(len(mismatchIdx)))
-    print("{:d} total matches and mismatches".format(len(matchOrMisIdx)))
-    return propTotal,dTotal,nAminoAcids
+    print("{:d} total matches and mismatches".format(nMatchMisMatch))
+    return propTotal,dTotal,nMatchMisMatch
 
 def printAminoInfo(piA,chars):
     delim = "\t\t"
@@ -154,15 +156,14 @@ def get1981ModelCodonPos(piA,D,length,lambdaV,tau):
     H = np.zeros(codonSize)
     H[:] = np.sum(piA * (1-piA),axis=1) # use [:] to make sure no funny indexing
     xVals = D/(H)
-    p = (1 - np.exp(-2*lambdaV * tau)) * H
     n = lenV
     mFunc = lambda x: q12Dist(x,normalizer=H)
-    gXBar = getXBar(n,xTrials,mFunc)
-    gMu = 0
-    normalStd = 0
+    gXBar = getXBar(n,xVals,mFunc)
+    gMu = np.zeros(codonSize)
+    normalStd = np.zeros(codonSize)
 # XXX Don't need theory?
+#    p = (1 - np.exp(-2*lambdaV * tau)) * H
 #    gXBar,gMu,normalStd = getDeltaStats(n,p,xVals,distFunc=mFunc)
-
     return gXBar,gMu,normalStd
 
 def plotAll(outDir,gXBar,gMu,normalStd,lambdaV,tau):
