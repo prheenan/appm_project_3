@@ -31,12 +31,15 @@ def normHist(data,bins,**kwargs):
     plt.bar(left=bins[:-1],height=norm,width=np.diff(bins),**kwargs)
     return norm
 
+def getXBar(n,xTrials,distFunc):
+    return distFunc(xTrials/n) 
+
 def getDeltaStats(n,p,xTrials,distFunc):
     mu = n*p
+    gXBar = getXBar(n,xTrials,distFunc)
     sigma= np.sqrt(p*(1-p))
     gMu = q12Dist(p)
     gPrimeMu = (1/(1-p/2) )
-    gXBar = distFunc(xTrials/n) 
     normalStd = abs(gPrimeMu) * sigma / np.sqrt(n)
     return gXBar,gMu,normalStd
 

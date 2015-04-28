@@ -15,7 +15,7 @@ sys.path.append(path)
 import GenUtilities  as pGenUtil
 import PlotUtilities as pPlotUtil
 import CheckpointUtilities as pCheckUtil
-from q1_3 import getDeltaStats,q12Dist
+from q1_3 import getXBar,q12Dist
 
 # import biopython stuff
 from Bio.Seq import Seq
@@ -157,7 +157,12 @@ def get1981ModelCodonPos(piA,D,length,lambdaV,tau):
     p = (1 - np.exp(-2*lambdaV * tau)) * H
     n = lenV
     mFunc = lambda x: q12Dist(x,normalizer=H)
-    gXBar,gMu,normalStd = getDeltaStats(n,p,xVals,distFunc=mFunc)
+    gXBar = getXBar(n,xTrials,mFunc)
+    gMu = 0
+    normalStd = 0
+# XXX Don't need theory?
+#    gXBar,gMu,normalStd = getDeltaStats(n,p,xVals,distFunc=mFunc)
+
     return gXBar,gMu,normalStd
 
 def plotAll(outDir,gXBar,gMu,normalStd,lambdaV,tau):
