@@ -94,28 +94,64 @@ def getProportionsAtIdx(idx,seq,chars,normalize):
     props = counts / normalize
     return props
 
-def getNonGapProportions(pairwiseFile,alignToNucleo,alignToTranslated,chars):
-    seqAlign,rec = getSequenceAndRec(pairwiseFile,'fasta')
-    compareLen = min(len(seqAlign),len(alignToTranslated))
-    maxStrLen = max(len(seqAlign),len(alignToTranslated))
-    # go through all the matching or mismatched codons.
-    nucleoCompare = seqAlign[:compareLen]
-    originalCompare = alignToTranslated[:compareLen]
-    # XXX assume gaps are '*' for now...
-    gapStr = " " 
-    # check that (1) not looking at a gap (2) our condition (match/mis) is true
-    genIdx = lambda condition : \
-             [i for i in range(compareLen) 
-              if ( (nucleoCompare[i] != gapStr) and
-                   condition(nucleoCompare[i],originalCompare[i]))]
-    nGaps = nucleoCompare.count(gapStr) + \
-            maxStrLen-compareLen
-    matchIdx = genIdx(lambda s1,s2: s1 == s2)
-    mismatchIdx = genIdx(lambda s1,s2: s1 != s2)
-    matchOrMisIdx = matchIdx + mismatchIdx
-    nMatchMisMatch = len(matchOrMisIdx)
-    assert (nMatchMisMatch) ==  maxStrLen-nGaps
-    assert (set(matchIdx) & set(mismatchIdx)) == set()
+def getOptimalAminoAcidAlignment(nucleo1,nucleo2):
+    tx1 = str(Seq(nucleo1))
+    tx2 = str(Seq(nucleo2))
+    print(tx1)
+    print(tx2)
+    alignments = pairwise2.align.globalxx(tx1, tx2)
+    print('aligned!')
+    bestAlignment = alignments[0]
+    # return the actual strings associated with the alignment
+    # dont necessarily care about the scores...
+    return bestAlignment[0],bestAlignment[1]
+
+def getMatchIdx(string1,string2):
+    gapOffset1 = 0
+    gapOffset2 = 0
+    matchIdx1 = []
+    matchIdx2 = []
+    misMatchIdx1 = []
+    misMatchIdx2 = []
+    gapIdx1 = []
+    gapIdx2 = []
+    gapStr = '-'
+    # XXX assume the sequences are of the same length.
+    for idx,(char1,char2) in enumerate(zip(string1,
+                                           string2)):
+        effIdx1 = idx - gapOffset1
+        effIdx2 = idx - gapOffset2
+        if (char1 == char2):
+            matchIdx1.append(effIdx1)
+            matchIdx2.append(effIdx2)
+        elif (char1 == gapStr or char2 == gapStr):
+            # one was a gap
+            if (char1 == gapStr):
+                gapOffset1 += 1
+            else:
+                gapOffset2 += 1
+            gapIdx1.append(effIdx1)
+            gapIdx2.append(effIdx1)
+        else:
+            # simple mismatch
+            misMatchIdx1.append(effIdx1)
+            misMatchIdx2.append(effIdx1)
+    # XXX for now, just return the mathc indices of the first
+    return matchIdx1,misMatchIdx1,gapIdx1
+            
+    
+def getNonGapProportions(nucleo1,nucleo2,chars):
+    txAlign1,txAlign2 = getOptimalAminoAcidAlignment(nucleo1,nucleo2)
+    matchIdx1,misMatchIdx1,gapIdx1 = getMatchIdx(txAlign1,txAlign2)
+    # POST: know the matching / mismatching codons.
+    # next, need to figure out 
+    # make sure there are no duplicates
+    assert (len(matchIdx1) + len(misMatchIdx1) + len(gapIdx1) == len(nucleo1))
+    # make sure the indices cover everything
+    assert (set(matchIdx1 +  misMatchIdx1 + gapIdx1) ==  
+            set([i for i in range(len(nucleo1))]) )
+    # make sure the indices have no overlap
+    assert (set(matchIdx1) & set(mismatchIdx) & set(gapIdx1)) == set()
     # normalize by the total number of nucleotides at codon 'i' (equiv to
     # total number of amino acids)
     nAminoAcids = maxStrLen-nGaps
@@ -149,26 +185,28 @@ def printAminoInfo(piA,chars):
         print("Position {:d}\t".format(i) + 
               delim.join("{:.4g}".format(r) for r in row))
 
-def get1981ModelCodonPos(piA,D,length,lambdaV,tau):
+def get1981ModelCodonPos(piA,D,length):
     # piA is the proportion of base, row for each codon position, 
     # column for each {A,T,G,C}
     # D is the total count of bases. 
     codonSize = 3
+    print(piA)
     H = np.zeros(codonSize)
     H[:] = np.sum(piA * (1-piA),axis=1) # use [:] to make sure no funny indexing
     xVals = D/(H)
     n = lenV
     mFunc = lambda x: q12Dist(x,normalizer=H)
-    p = (1 - np.exp(-2*lambdaV * tau)) * H
-    gXBar,gMu,normalStd = getDeltaStats(n,p,xVals,distFunc=mFunc)
-    return gXBar,gMu,normalStd
+    # maximum likelihood estimator
+    p = xVals/n
+    gXBar,xx,normalStd = getDeltaStats(n,p,xVals,distFunc=mFunc)
+    return gXBar,normalStd
 
-def plotAll(outDir,gXBar,gMu,normalStd,lambdaV,tau):
+def plotAll(outDir,gXBar,normalStd):
     fig = plt.figure()
     fontSize = 18
     positionX = np.arange(gXBar.size)
     plt.plot(positionX,gXBar,'ro',label="Data for K-hat")
-    plt.errorbar(x=positionX,y=gMu,yerr=normalStd,fmt='bx',
+    plt.errorbar(x=positionX,y=gXBar,yerr=normalStd,fmt='bx',
                  label="Theory")
     plt.xlabel("Position on codon",fontsize=fontSize)
     plt.ylabel("K-hat, E[substitutions/homologous base].",
@@ -181,11 +219,11 @@ def plotAll(outDir,gXBar,gMu,normalStd,lambdaV,tau):
               format(lambdaV,tau),fontsize=fontSize)
     pPlotUtil.savefig(fig,outDir + "q2_4_Khat")
     delim = "\t"
-    print(delim.join(["Pos","K-Hat","g(mu)(var)"]))
-    for i,(measured,theoryMean,theoryStd) \
-        in enumerate(zip(gXBar,gMu,normalStd)):
-        print("{:d}\t{:.3g}\t{:.3g}({:.3g})".format(i,measured,
-                                                    theoryMean,theoryStd**2))
+    print(delim.join(["Pos","K-Hat(var)","K-hat(stdv)"]))
+    for i,(measured,theoryStd) \
+        in enumerate(zip(gXBar,normalStd)):
+        print("{:d}\t{:.3g}({:.3g})\t{:.3g}".format(i,measured,
+                                                    theoryStd**2,theoryStd))
     
 if __name__ == '__main__':
     dataDir = "../data/"
@@ -215,19 +253,15 @@ if __name__ == '__main__':
                                                  fileEx)
     if determineMSA:
         # choose the index for human...
-        idxToChoose = fileLabels.index('human')
-        nucleoAlign = cdsSeq[idxToChoose]
-        aminoAlign = cdsTx[idxToChoose]
-        # use the BLAST file to figure out the 'pi' vector 
-        # (propoprtion of bases)
-        pairwiseFile = dataDir + seqAlignFile 
+        idxFirst = fileLabels.index('human')
+        idxSecond = fileLabels.index('rat')
         # get piA, the number of proportion of each matched or mismatched
         # nucleic acid, D, and l fo the Felsenstein 1981 model
-        piA,dMismatch,lenV = getNonGapProportions(pairwiseFile,nucleoAlign,
-                                                  aminoAlign,chars)
-        gXBar,gMu,normalStd = get1981ModelCodonPos(piA,dMismatch,
-                                                   lenV,lambdaV,tau)
-        plotAll(outDir,gXBar,gMu,normalStd,lambdaV,tau)
+        piA,dMismatch,lenV = getNonGapProportions(cdsSeq[idxFirst],
+                                                  cdsSeq[idxSecond],
+                                                  chars)
+        gXBar,normalStd = get1981ModelCodonPos(piA,dMismatch,lenV)
+        plotAll(outDir,gXBar,normalStd)
     if (printPiA):
         printAminoInfo(piA,chars)
 

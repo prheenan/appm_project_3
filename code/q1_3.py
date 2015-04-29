@@ -38,7 +38,7 @@ def getDeltaStats(n,p,xTrials,distFunc):
     mu = n*p
     gXBar = getXBar(n,xTrials,distFunc)
     sigma= np.sqrt(p*(1-p))
-    gMu = q12Dist(p)
+    gMu = distFunc(p)
     gPrimeMu = (1/(1-p/2) )
     normalStd = abs(gPrimeMu) * sigma / np.sqrt(n)
     return gXBar,gMu,normalStd
