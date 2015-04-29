@@ -38,17 +38,20 @@ def globalAlign(humSeq, ratSeq, match=2, mismatch=-1, gapStart=-.5, gapExt=-.1):
 def shuffledAligns(humSeq, ratSeq,  n):
   alignments = []
   humList = list(humSeq)
-  ratStr = str(ratSeq)
+  ratStr = str(ratSeq.translate())
   for _ in xrange(n):
     np.random.shuffle(humList)
-    alignments.append(globalAlign(''.join(humList), ratStr)[0][2])#score is the third element of the tuple
+    #translate shuffled to amino acids
+    aa = Seq(''.join(humList)).translate()
+    alignments.append(globalAlign(str(aa), ratStr)[0][2])#score is the third element of the tuple
   return alignments
 
 #determine the fraction of alignments from shuffledAligns with higher scores
 #than the alignment between the two sequences
 #n is the number of shuffled sequences to create
+#humSeq and ratSeq are expected as DNA sequences
 def getPValue(humSeq, ratSeq, n=1000):
-  opt = globalAlign(str(humSeq), str(ratSeq))[0][2]
+  opt = globalAlign(str(humSeq.translate()), str(ratSeq.translate()))[0][2]
   scores = shuffledAligns(humSeq, ratSeq, n)
   highScores = len(filter(lambda x: x>opt, scores))
   return float(highScores)/n
