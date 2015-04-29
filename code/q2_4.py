@@ -26,6 +26,36 @@ from Bio.Alphabet import IUPAC
 from Bio import pairwise2
 from collections import Counter
 
+#return a golbal alignment for the two sequences
+def globalAlign(humSeq, ratSeq, match=2, mismatch=-1, gapStart=-.5, gapExt=-.1):
+  #scores: match, mismatch, gap start, gap extend
+  return pairwise2.align.globalms(humSeq, ratSeq, match, mismatch, gapStart, gapExt)
+
+#generate n shuffled versions of humSeq (a biopython Seq object)
+#for each, find optimal alignment to ratSeq (DNA)
+#given: Seq, Seq 
+#return: [alignment scores]
+def shuffledAligns(humSeq, ratSeq,  n):
+  alignments = []
+  humList = list(humSeq)
+  ratStr = str(ratSeq)
+  for _ in xrange(n):
+    np.random.shuffle(humList)
+    alignments.append(globalAlign(''.join(humList), ratStr)[0][2])#score is the third element of the tuple
+  return alignments
+
+#determine the fraction of alignments from shuffledAligns with higher scores
+#than the alignment between the two sequences
+#n is the number of shuffled sequences to create
+def getPValue(humSeq, ratSeq, n=1000):
+  opt = globalAlign(str(humSeq), str(ratSeq))[0][2]
+  scores = shuffledAligns(humSeq, ratSeq, n)
+  highScores = len(filter(lambda x: x>opt, scores))
+  return float(highScores)/n
+
+#quick test
+print(getPValue(Seq("accgt"),Seq("acg"),n=10))
+
 def getCDS(record):
     # more or less copied from here:
 #http://www2.warwick.ac.uk/fac/sci/moac/people/students/peter_cock/python/genbank/
