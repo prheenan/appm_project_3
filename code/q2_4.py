@@ -70,8 +70,10 @@ def shuffledAligns(humSeq, ratSeq, n,nProc=10):
 #determine the fraction of alignments from shuffledAligns with higher scores
 #than the alignment between the two sequences
 #n is the number of shuffled sequences to create
+#humSeq and ratSeq are expected as DNA sequences
 def getPValue(humSeq, ratSeq, n=1000):
-  opt = getAlignScore(globalAlign(str(humSeq), str(ratSeq)))
+  optAlign = getAlignScore(globalAlign(str(humSeq), str(ratSeq)))
+  opt = getAlignScore(optAlign)
   alignments = shuffledAligns(humSeq, ratSeq, n)
   scores = [getAlignScore(a) for a in alignments]
   highScores = len(filter(lambda x: x>opt, scores))
