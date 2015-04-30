@@ -181,7 +181,6 @@ def getMatchIdx(string1,string2):
         else:
             # simple mismatch
             misMatchIdx.append(effIdx1)
-    # XXX for now, just return the mathc indices of the first
     return matchIdx,misMatchIdx,gapIdx
                 
 def getAlignScore(alignment):
@@ -227,9 +226,16 @@ def getNonGapProportions(nucleo1,nucleo2,chars,forceReAlign,blosum,label):
         allIdx = idxTx(matchOrMisMatchIdx,offset)
         propTotal[offset,:] = getProportionsAtIdx(allIdx,nucleo1,
                                                   chars,nAmino)
-        misIdx = idxTx(misMatchIdx,offset)
-        # use a normalization of one, so we just get D 
-        dMismatch[offset,:] = getProportionsAtIdx(misIdx,nucleo1,
+        # the 'real' mismatches can occur two ways.
+        # (1) The amino acids match, but the nucleotides are off
+        # (2) The amino acids don't match, neither do the nucleotides
+        # We expect (1) to happen more frequently on the third codon
+        # In order to check, we need to check *all* match and mismatch indices
+        realMisIdx = [ i for i in allIdx
+                       if  (i < min(len(nucleo1),len(nucleo2))) and
+                       (nucleo1[i] != nucleo2[i]) ]
+        # use a normalization of one, so we just get D                       
+        dMismatch[offset,:] = getProportionsAtIdx(realMisIdx,nucleo1,
                                                      chars,1)
     dTotal = np.sum(dMismatch,axis=1)
     nNonGap = nMatch+nMisMatch
