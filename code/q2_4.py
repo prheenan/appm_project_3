@@ -323,6 +323,7 @@ def plotAlignments(outDir,alignments,scoreOptimal,label):
     plotScoreHistograms(scores,fontSize)
     plotPDF()
     zScore = (scoreOptimal-meanScore)/stdevScore
+    print("Z Score for {:s} is {:.2f}".format(label,zScore))
     # ??? is this the real p Value? Dont think so
     extrProb = 1-norm().cdf(zScore)
     plt.title(("Histogram of optimal alignment score for {:d} trials\n" + 
