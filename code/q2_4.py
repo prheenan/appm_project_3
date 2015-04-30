@@ -310,18 +310,21 @@ def plotAlignments(outDir,alignments,scoreOptimal,label):
               fontsize=fontSize)
     pdfFunc = norm(loc=meanScore,scale=stdevScore).pdf(bins)
     plotPDF = lambda :  plt.plot(bins,pdfFunc,'g--',linewidth=3.0,
-                                 label="Normal(mean,variance)")
+                                 label="Normal(mean,var)")
     plotPDF()
     plt.legend(fontsize=fontSize)
     ax = plt.subplot(1,2,2)
     plotScoreHistograms(scores,fontSize)
     plotPDF()
     zScore = (scoreOptimal-meanScore)/stdevScore
+    # ??? is this the real p Value? Dont think so
+    extrProb = 1-norm().cdf(zScore)
     plt.title(("Histogram of optimal alignment score for {:d} trials\n" + 
-               "Optimal score is ~ {:d}*sigma from shuffled mean").\
-              format(len(scores),int(zScore)),fontsize=fontSize)
+               "Optimal score: {:d}*sigma from shuffled mean.\n"
+               "P(shuffled score>=optimal) ~ {:.5g}").\
+              format(len(scores),int(zScore),extrProb),fontsize=fontSize)
     plt.axvline(scoreOptimal,color='r',linestyle='--',
-                label="Optimal global alignment scorem using {:s}: {:d}".\
+                label="Optimal global alignment score using {:s}: {:d}".\
                 format(label,int(scoreOptimal)))
     plt.legend(loc='best',fontsize=fontSize)
     pPlotUtil.savefig(fig,outDir+ "q2Histograms" + label)
