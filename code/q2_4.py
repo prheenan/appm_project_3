@@ -27,31 +27,43 @@ from Bio import pairwise2
 from collections import Counter
 # parallelize the dynamic programming stuff.
 from multiprocessing import Pool
+# for plotting histograms
+from scipy.stats import norm
 
-
+from Bio.SubsMat import MatrixInfo as matlist
+# according to this, BLOSUM-45 is better for long matrices
+#http://www.ncbi.nlm.nih.gov/blast/html/sub_matrix.html
+alignMat = matlist.blosum45
 #return a global alignment for *translated* version of two nucleotide sequences
-def globalAlign(humSeq, ratSeq, match=2, mismatch=-3, gapStart=-11, gapExt=-2):
+def globalAlign(humSeq, ratSeq, useBlosum=False,
+                match=2, mismatch=-3, gapStart=-11, gapExt=-2):
 # gap start/extension are defaults from: http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch&PROG_DEF=blastn&BLAST_PROG_DEF=blastn&BLAST_SPEC=GlobalAln&LINK_LOC=BlastHomeLink
 # match/mismatch from defaults here: http://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_PROGRAMS=blastn&PAGE_TYPE=BlastSearch&BLAST_SPEC=GlobalAln&LINK_LOC=blasttab&LAST_PAGE=blastp&BLAST_INIT=GlobalAln
   #scores: match, mismatch, gap start, gap extend
-    humTx = str(Seq(humSeq).translate())
-    ratTx = str(Seq(ratSeq).translate())
-    return pairwise2.align.globalms(humTx, ratTx, 
-                                    match, mismatch, gapStart,
-                                    gapExt, one_alignment_only=True)
+    # thhe BLOSUM matrices use 'X' for stop.
+    stopStr = 'X'
+    humTx = str(Seq(humSeq).translate(stop_symbol=stopStr))
+    ratTx = str(Seq(ratSeq).translate(stop_symbol=stopStr))
+    if (useBlosum):
+        return pairwise2.align.globalds(humTx, ratTx, alignMat, gapStart,
+                                        gapExt,one_alignment_only=True)
+    else: 
+        return pairwise2.align.globalms(humTx, ratTx, 
+                                        match, mismatch, gapStart,
+                                        gapExt, one_alignment_only=True)
 
 #generate n shuffled versions of humSeq (a biopython Seq object)
 #for each, find optimal alignment to ratSeq (DNA)
 #given: Seq, Seq 
 #return: [alignment scores]
 def getShuffleAlign(args):
-  i,humStr,ratStr = args
-  alignment = globalAlign(humStr, ratStr)
+  i,humStr,ratStr,blosum = args
+  alignment = globalAlign(humStr, ratStr,blosum)
   print("Global alignment: iteration... {:d} got score {:.5g}".\
         format(i,getAlignScore(alignment)))
   return alignment
 
-def shuffledAligns(humSeq, ratSeq, n,nProc=10):
+def shuffledAligns(humSeq, ratSeq, n,blosum,nProc=10):
   alignments = []
   humList = list(humSeq)
   ratStr = str(ratSeq)
@@ -63,7 +75,7 @@ def shuffledAligns(humSeq, ratSeq, n,nProc=10):
                if not np.random.shuffle(humList)]
   # omg python is so awesome. make a pool of processes, map to our function
   # only wonky bit: have to pass the arguments as a tuple
-  alignments = p.map(getShuffleAlign,[ (i,shuffles[i],ratStr) 
+  alignments = p.map(getShuffleAlign,[ (i,shuffles[i],ratStr,blosum) 
                                         for i in range(n)] )
   return alignments
 
@@ -176,10 +188,11 @@ def getAlignScore(alignment):
   # return the first element (best), second score
   return alignment[0][2]
 
-def getNonGapProportions(nucleo1,nucleo2,chars,forceReAlign):
+def getNonGapProportions(nucleo1,nucleo2,chars,forceReAlign,blosum,label):
   # translate the nucleotides, then globally align them.
-    alignObj =pCheckUtil.getCheckpoint("./out/alignment.pkl",
-                                       globalAlign,forceReAlign,nucleo1,nucleo2)
+    alignObj =pCheckUtil.getCheckpoint("./out/alignment" + label + ".pkl",
+                                       globalAlign,forceReAlign,nucleo1,nucleo2,
+                                       blosum)
     # get the first (only) alignment score
     alignS1S2ScoreStartEnd = alignObj[0]
     txAlign1,txAlign2 = alignS1S2ScoreStartEnd[0],alignS1S2ScoreStartEnd[1]
@@ -249,7 +262,7 @@ def get1981ModelCodonPos(piA,D,length):
     gXBar,xx,normalStd = getDeltaStats(n,p,xVals,distFunc=mFunc)
     return gXBar,normalStd
 
-def plotAll(outDir,gXBar,normalStd):
+def plotAll(outDir,gXBar,normalStd,label):
     fig = plt.figure()
     fontSize = 18
     positionX = np.arange(gXBar.size)
@@ -265,7 +278,7 @@ def plotAll(outDir,gXBar,normalStd):
     plt.title("K-hat versus expected K \n"+
               "lambda={:.3g}[1/year], tau={:.3g}[years]".\
               format(lambdaV,tau),fontsize=fontSize)
-    pPlotUtil.savefig(fig,outDir + "q2_4_Khat")
+    pPlotUtil.savefig(fig,outDir + "q2_4_Khat" + label)
     delim = "\t"
     print(delim.join(["Pos","K-Hat(var)","K-hat(stdv)"]))
     for i,(measured,theoryStd) \
@@ -274,8 +287,44 @@ def plotAll(outDir,gXBar,normalStd):
                                                     theoryStd**2,theoryStd))
     
 
-def plotAlignments(alignments,score):
-  pass
+def plotScoreHistograms(scores,fontSize,edgecolor='none'):
+    meanScore = np.mean(scores)
+    stdevScore = np.std(scores)
+    step = 1
+    bins = np.arange(min(scores)-step,max(scores)+step,1)
+    plt.hist(scores, bins,normed=True,label="Distr. "+
+             "mean:{:.3g}, var: {:.3g})".format(meanScore,stdevScore**2),
+             alpha=0.25,edgecolor=edgecolor)
+    plt.xlabel("Optimal alignment score for sequence",fontsize=fontSize)
+    plt.ylabel("Occurence of score",fontsize=fontSize)
+    pPlotUtil.tickAxisFont()
+    return meanScore,stdevScore,bins
+
+def plotAlignments(outDir,alignments,scoreOptimal,label):
+    fontSize = 25
+    scores = [ getAlignScore(a) for a in alignments ] 
+    fig = pPlotUtil.figure(xSize=24,ySize=12)
+    plt.subplot(1,2,1)
+    meanScore,stdevScore,bins = plotScoreHistograms(scores,fontSize,'k')
+    plt.title("Shuffled DNA alignment Histogram",
+              fontsize=fontSize)
+    pdfFunc = norm(loc=meanScore,scale=stdevScore).pdf(bins)
+    plotPDF = lambda :  plt.plot(bins,pdfFunc,'g--',linewidth=3.0,
+                                 label="Normal(mean,variance)")
+    plotPDF()
+    plt.legend(fontsize=fontSize)
+    ax = plt.subplot(1,2,2)
+    plotScoreHistograms(scores,fontSize)
+    plotPDF()
+    zScore = (scoreOptimal-meanScore)/stdevScore
+    plt.title(("Histogram of optimal alignment score for {:d} trials\n" + 
+               "Optimal score is ~ {:d}*sigma from shuffled mean").\
+              format(len(scores),int(zScore)),fontsize=fontSize)
+    plt.axvline(scoreOptimal,color='r',linestyle='--',
+                label="Optimal global alignment scorem using {:s}: {:d}".\
+                format(label,int(scoreOptimal)))
+    plt.legend(loc='best',fontsize=fontSize)
+    pPlotUtil.savefig(fig,outDir+ "q2Histograms" + label)
 
 if __name__ == '__main__':
     dataDir = "../data/"
@@ -313,18 +362,24 @@ if __name__ == '__main__':
     humanSeq = cdsSeq[fileLabels.index('human')]
     # get piA, the number of proportion of each matched or mismatched
     # nucleic acid, D, and l fo the Felsenstein 1981 model
-    piA,dMismatch,lenV,score = \
-        pCheckUtil.getCheckpoint(workDir + "align.pkl",\
-                                 getNonGapProportions,determineMSA,
-                                 humanSeq,ratSeq,chars,determineMSA)
-    gXBar,normalStd = get1981ModelCodonPos(piA,dMismatch,lenV)
-    plotAll(outDir,gXBar,normalStd)
-    alignments = pCheckUtil.getCheckpoint(workDir + "alignHistogram.pkl",\
-                                          shuffledAligns,forceAlignments,
-                                          humanSeq,ratSeq,histogramSize)
-    plotAlignments(alignments,score)
-    if (printPiA):
-        printAminoInfo(piA,chars)
+    # use blosum in one, not in the other
+    for blosum in [True,False]:
+        label = "blosum" if blosum else "NCBI"
+        ending = label + ".pkl"
+        piA,dMismatch,lenV,score = \
+                pCheckUtil.getCheckpoint(workDir + "align" + ending,\
+                                         getNonGapProportions,determineMSA,
+                                         humanSeq,ratSeq,chars,determineMSA,
+                                         blosum,label)
+        gXBar,normalStd = get1981ModelCodonPos(piA,dMismatch,lenV)
+        plotAll(outDir,gXBar,normalStd,label)
+        alignments = pCheckUtil.getCheckpoint(workDir+"alignHistogram"+ending,\
+                                              shuffledAligns,forceAlignments,
+                                              humanSeq,ratSeq,histogramSize,
+                                              blosum)
+        plotAlignments(outDir,alignments,score,label)
+        if (printPiA):
+            printAminoInfo(piA,chars)
 
         
 
