@@ -34,17 +34,18 @@ def normHist(data,bins,**kwargs):
 def getXBar(n,xTrials,distFunc):
     return distFunc(xTrials/n) 
 
-def getDeltaStats(n,p,xTrials,distFunc):
+def getDeltaStats(n,p,xTrials,normalizer=2):
     mu = n*p
+    distFunc = lambda x : q12Dist(x,normalizer)
     gXBar = getXBar(n,xTrials,distFunc)
     sigma= np.sqrt(p*(1-p))
     gMu = distFunc(p)
-    gPrimeMu = (1/(1-p/2) )
+    gPrimeMu = (1/(1-p/normalizer) )
     normalStd = abs(gPrimeMu) * sigma / np.sqrt(n)
     return gXBar,gMu,normalStd
 
-def getDeltaModel(n,p,xTrials,distFunc = q12Dist,normMean=True):
-    gXBar,gMu, normalStd = getDeltaStats(n,p,xTrials,distFunc = q12Dist)
+def getDeltaModel(n,p,xTrials,normalizer=2,normMean=True):
+    gXBar,gMu, normalStd = getDeltaStats(n,p,xTrials,normalizer)
     normalDist = norm(loc=0,scale=normalStd)
     dist = (gXBar- (gMu))
     distMean = np.mean(dist)
@@ -78,8 +79,8 @@ def plotSingleHist(n,p,xTrials,outDir):
     plt.plot(xVals,rawPDF,'r--',linewidth=5.0,
              label="Theorertical Distr: Stdev={:.4f}".\
              format(normalStd))
-    plt.title("Histogram for g(x) for n={:d},p={:.2f}".format(int(n),p),
-              fontsize=g_title)
+    plt.title("Histogram for g(xBar)-g(mu) for n={:d},p={:.2f}".\
+              format(int(n),p),fontsize=g_title)
     plt.xlabel("(g(Xbar)-g(mu)) ~ Normal(0,[g'(x)*sigma]^2/n)",
                fontsize=g_label)
     plt.ylabel("Proportion",fontsize=g_label)
@@ -105,22 +106,23 @@ def plotBinomials(dataMatrix,nVals,p):
     # plot the means and variances
     fig = pPlotUtil.figure()
     plt.subplot(1,2,1)
-    plt.title("Mean of g(xBar)\n approaches expected",fontsize=fontsize)
+    plt.title("Mean of g(xBar)-g(mu) approaches 0",fontsize=fontsize)
     expMean = 0
     plt.plot(nVals,means,'ko',label="Actual Mean")
     plt.axhline(expMean,color='b',linestyle='--',
                 label="Expected Mean: {:.2g}".format(expMean))
     plt.ylim(-min(means),max(means)*1.1)
     plt.xlabel("Value of n for binomial",fontsize=fontsize)
-    plt.ylabel("Value of g(xBar)",fontsize=fontsize)
+    plt.ylabel("Value of g(xBar)-g(mu)",fontsize=fontsize)
     plt.legend(fontsize=fontsize)
     pPlotUtil.tickAxisFont()
     plt.subplot(1,2,2)
     plt.semilogy(nVals,varReal,'ko',label="Actual Variance")
     plt.semilogy(nVals,varDist,'b--',label="Expected Variance")    
-    plt.title("Variance of g(x)-g(mu)\n approaches expected",fontsize=fontsize)
+    plt.title("Variance of g(xBar)-g(mu)\n approaches expected",
+              fontsize=fontsize)
     plt.xlabel("Value of n for binomial",fontsize=fontsize)
-    plt.ylabel("Value of g(x) variance",fontsize=fontsize)
+    plt.ylabel("Value of g(xBar) variance",fontsize=fontsize)
     pPlotUtil.tickAxisFont()
     plt.legend(fontsize=fontsize)
     pPlotUtil.savefig(fig,outDir + "MeanVar")

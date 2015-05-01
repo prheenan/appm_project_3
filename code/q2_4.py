@@ -262,10 +262,9 @@ def get1981ModelCodonPos(piA,D,length):
     H[:] = np.sum(piA * (1-piA),axis=1) # use [:] to make sure no funny indexing
     xVals = D/(H)
     n = lenV
-    mFunc = lambda x: q12Dist(x,normalizer=H)
     # maximum likelihood estimator
     p = xVals/n
-    gXBar,xx,normalStd = getDeltaStats(n,p,xVals,distFunc=mFunc)
+    gXBar,xx,normalStd = getDeltaStats(n,p,xVals,normalizer=H)
     return gXBar,normalStd
 
 def plotAll(outDir,gXBar,normalStd,label):
